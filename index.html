@@ -4,137 +4,368 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>عداد الأيام المتبقية لانتهاء مرحلة السادس الإعدادي</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f0f8ff;
+        @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700&display=swap');
+        
+        * {
             margin: 0;
             padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Tajawal', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            margin: 0;
+            padding: 20px 0;
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
             text-align: center;
+            color: #2c3e50;
+            background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1IiBoZWlnaHQ9IjUiPgo8cmVjdCB3aWR0aD0iNSIgaGVpZ2h0PSI1IiBmaWxsPSIjZmZmIj48L3JlY3Q+CjxyZWN0IHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGZpbGw9IiNjZGNkY2QiPjwvcmVjdD4KPC9zdmc+');
+            background-attachment: fixed;
         }
         
         .container {
-            background-color: #ffffff;
-            border-radius: 15px;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-            padding: 30px;
-            width: 90%;
-            max-width: 900px;
+            background-color: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1), 0 5px 15px rgba(0, 0, 0, 0.05);
+            padding: 40px;
+            width: 92%;
+            max-width: 1000px;
+            margin: 20px auto;
+            transition: all 0.3s ease;
+        }
+        
+        .container:hover {
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15), 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .header {
+            position: relative;
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #f1f1f1;
         }
         
         h1 {
             color: #2c3e50;
-            margin-bottom: 10px;
-            font-size: 2em;
+            margin-bottom: 15px;
+            font-size: 2.2em;
+            font-weight: 700;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
         }
         
         .subtitle {
             color: #7f8c8d;
             margin-bottom: 30px;
             font-size: 1.2em;
+            font-weight: 400;
         }
         
         .countdown-container {
-            margin: 20px 0;
-            padding: 20px;
-            border-radius: 10px;
+            margin: 25px 0;
+            padding: 25px;
+            border-radius: 15px;
             background-color: #f9f9f9;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
         }
         
-        .arabic {
-            border-right: 5px solid #e74c3c;
+        .countdown-container:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
         }
         
-        .english {
-            border-right: 5px solid #3498db;
+        .countdown-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 8px;
+            height: 100%;
+            border-radius: 0 15px 15px 0;
+        }
+        
+        .arabic::before {
+            background: linear-gradient(to bottom, #e74c3c, #c0392b);
+        }
+        
+        .english::before {
+            background: linear-gradient(to bottom, #3498db, #2980b9);
+        }
+        
+        .exam::before {
+            background: linear-gradient(to bottom, #9b59b6, #8e44ad);
         }
         
         h2 {
-            font-size: 1.5em;
-            margin-bottom: 20px;
+            font-size: 1.6em;
+            margin-bottom: 25px;
+            color: #34495e;
+            position: relative;
+            display: inline-block;
+        }
+        
+        h2::after {
+            content: '';
+            position: absolute;
+            width: 50%;
+            height: 3px;
+            bottom: -8px;
+            right: 25%;
+        }
+        
+        .arabic h2::after {
+            background: linear-gradient(to right, rgba(231, 76, 60, 0), rgba(231, 76, 60, 1), rgba(231, 76, 60, 0));
+        }
+        
+        .english h2::after {
+            background: linear-gradient(to right, rgba(52, 152, 219, 0), rgba(52, 152, 219, 1), rgba(52, 152, 219, 0));
+        }
+        
+        .exam h2::after {
+            background: linear-gradient(to right, rgba(155, 89, 182, 0), rgba(155, 89, 182, 1), rgba(155, 89, 182, 0));
         }
         
         .countdown {
             display: flex;
             justify-content: space-around;
-            margin: 20px 0;
+            margin: 25px 0;
             flex-wrap: wrap;
         }
         
         .countdown-item {
-            padding: 15px;
-            min-width: 100px;
+            padding: 20px 15px;
+            min-width: 120px;
             margin: 10px;
-            border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s;
+            border-radius: 15px;
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .countdown-item::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            right: 0;
+            background-image: linear-gradient(120deg, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0) 50%, rgba(255,255,255,0.2) 100%);
+            z-index: 1;
         }
         
         .countdown-item:hover {
-            transform: translateY(-5px);
+            transform: translateY(-8px);
+            box-shadow: 0 12px 20px rgba(0, 0, 0, 0.15);
         }
         
         .arabic-item {
-            background-color: #e74c3c;
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
             color: white;
         }
         
         .english-item {
-            background-color: #3498db;
+            background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+            color: white;
+        }
+        
+        .exam-item {
+            background: linear-gradient(135deg, #9b59b6 0%, #8e44ad 100%);
             color: white;
         }
         
         .number {
-            font-size: 2.5em;
+            font-size: 2.8em;
             font-weight: bold;
             margin: 10px 0;
+            position: relative;
+            z-index: 2;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
         }
         
         .text {
-            font-size: 1.2em;
+            font-size: 1.3em;
+            position: relative;
+            z-index: 2;
         }
         
         .message {
-            margin-top: 10px;
-            font-size: 1.1em;
+            margin-top: 20px;
+            padding: 15px;
+            font-size: 1.2em;
+            border-radius: 10px;
+            transition: all 0.3s ease;
         }
         
         .arabic-message {
+            background-color: rgba(231, 76, 60, 0.1);
             color: #c0392b;
+            border-right: 4px solid #e74c3c;
         }
         
         .english-message {
+            background-color: rgba(52, 152, 219, 0.1);
             color: #2980b9;
+            border-right: 4px solid #3498db;
         }
         
-        .footer {
-            margin-top: 30px;
-            padding-top: 15px;
-            border-top: 1px solid #eee;
-            color: #95a5a6;
-            font-size: 0.9em;
+        .exam-message {
+            background-color: rgba(155, 89, 182, 0.1);
+            color: #8e44ad;
+            border-right: 4px solid #9b59b6;
         }
         
-        .highlight {
-            font-weight: bold;
-            color: #27ae60;
+        .quote {
+            margin: 35px 0;
+            padding: 25px;
+            background-color: #f5f5f5;
+            border-radius: 15px;
+            border-right: 4px solid #27ae60;
+            font-style: italic;
+            text-align: right;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .quote:hover {
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            transform: translateY(-3px);
+        }
+        
+        .quote::before {
+            content: "❝";
+            position: absolute;
+            bottom: -15px;
+            left: 15px;
+            font-size: 5em;
+            color: rgba(39, 174, 96, 0.1);
+        }
+        
+        .quote p {
+            font-size: 1.2em;
+            color: #333;
+            line-height: 1.6;
+            position: relative;
         }
         
         .visit-count {
-            margin-top: 15px;
-            font-size: 0.9em;
+            margin-top: 20px;
+            padding: 10px;
+            font-size: 1em;
             color: #7f8c8d;
+            background-color: #f9f9f9;
+            border-radius: 10px;
+            display: inline-block;
+        }
+        
+        .footer {
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+            color: #95a5a6;
+            font-size: 0.95em;
+        }
+        
+        /* تحسين التجاوب مع الأجهزة المختلفة */
+        @media (max-width: 768px) {
+            .container {
+                padding: 25px 15px;
+                width: 95%;
+            }
+            
+            h1 {
+                font-size: 1.8em;
+            }
+            
+            .countdown-item {
+                min-width: 100px;
+                padding: 15px 10px;
+            }
+            
+            .number {
+                font-size: 2.2em;
+            }
+            
+            .text {
+                font-size: 1.1em;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 1.6em;
+            }
+            
+            .countdown-container {
+                padding: 20px 10px;
+            }
+            
+            .countdown {
+                flex-wrap: wrap;
+            }
+            
+            .countdown-item {
+                min-width: 80px;
+                margin: 5px;
+            }
+            
+            .number {
+                font-size: 1.8em;
+            }
+            
+            .quote p {
+                font-size: 1.1em;
+            }
+            
+            .footer {
+                flex-direction: column;
+                gap: 15px;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>عداد الأيام المتبقية لانتهاء مرحلة السادس الإعدادي</h1>
+        <div class="header">
+            <h1>عداد الأيام المتبقية للمرحلة النهائية</h1>
+            <p class="subtitle">استعد للنجاح والتفوق في مرحلة السادس الإعدادي</p>
+        </div>
         
+        <!-- العداد الجديد: الامتحانات الوزارية -->
+        <div class="countdown-container exam">
+            <h2>الوقت المتبقي لبدء الامتحانات الوزارية</h2>
+            <div class="countdown">
+                <div class="countdown-item exam-item">
+                    <div id="exam-days" class="number">00</div>
+                    <div class="text">أيام</div>
+                </div>
+                <div class="countdown-item exam-item">
+                    <div id="exam-hours" class="number">00</div>
+                    <div class="text">ساعات</div>
+                </div>
+                <div class="countdown-item exam-item">
+                    <div id="exam-minutes" class="number">00</div>
+                    <div class="text">دقائق</div>
+                </div>
+                <div class="countdown-item exam-item">
+                    <div id="exam-seconds" class="number">00</div>
+                    <div class="text">ثواني</div>
+                </div>
+            </div>
+            <div id="exam-message" class="message exam-message">
+                موعد بدء الامتحانات: ١٤ يونيو ٢٠٢٥، الساعة ٧:٠٠ صباحاً
+            </div>
+        </div>
+        
+        <h1>عداد الأيام المتبقية لانتهاء مرحلة السادس الإعدادي</h1>
         
         <!-- العداد الأول: الدراسة العربية -->
         <div class="countdown-container arabic">
@@ -157,7 +388,7 @@
                     <div class="text">ثواني</div>
                 </div>
             </div>
-            <div class="message arabic-message" id="arabic-message">
+            <div id="arabic-message" class="message arabic-message">
                 تاريخ الانتهاء: ٢٩ يونيو ٢٠٢٥
             </div>
         </div>
@@ -183,19 +414,19 @@
                     <div class="text">ثواني</div>
                 </div>
             </div>
-            <div class="message english-message" id="english-message">
+            <div id="english-message" class="message english-message">
                 تاريخ الانتهاء: ١ يوليو ٢٠٢٥
             </div>
         </div>
         
-        <div class="visit-count">
-            زيارتك للموقع منذ: <span id="visit-date">--</span>
-        </div>
-        
-        <div class="quote" style="margin: 30px 0; padding: 20px; background-color: #f5f5f5; border-right: 4px solid #27ae60; font-style: italic; text-align: right;">
-            <p style="font-size: 1.1em; color: #333;">
+        <div class="quote">
+            <p>
                 "قال المسيح بن مريم (عليه السلام): إنّكم لا تدركون ما تحبّون إلاّ بصبركم على ما تكرهون"
             </p>
+        </div>
+        
+        <div class="visit-count">
+            🕒 زيارتك للموقع منذ: <span id="visit-date">--</span>
         </div>
         
         <div class="footer">
@@ -207,6 +438,7 @@
         // تواريخ الانتهاء - بتنسيق صحيح
         const arabicEndDate = new Date(2025, 5, 29, 23, 59, 59).getTime(); // شهر يونيو (الشهر 5 لأن الترقيم من 0)
         const englishEndDate = new Date(2025, 6, 1, 23, 59, 59).getTime(); // شهر يوليو (الشهر 6 لأن الترقيم من 0)
+        const examStartDate = new Date(2025, 5, 14, 7, 0, 0).getTime(); // 14 يونيو الساعة 7:00 صباحا
         
         // تسجيل تاريخ الزيارة الحالية
         const currentVisitDate = new Date().toLocaleDateString('ar-EG', {
@@ -229,6 +461,9 @@
             
             // تحديث العداد الإنجليزي
             updateSingleCountdown('english', englishEndDate, now);
+            
+            // تحديث عداد الامتحانات
+            updateSingleCountdown('exam', examStartDate, now);
         }
         
         // وظيفة لتحديث عداد واحد
@@ -244,9 +479,11 @@
                 
                 const messageElement = document.getElementById(`${prefix}-message`);
                 if (prefix === 'arabic') {
-                    messageElement.innerHTML = 'انتهت الدراسة العربية! تهانينا!';
-                } else {
-                    messageElement.innerHTML = 'انتهت الدراسة الإنجليزية! تهانينا!';
+                    messageElement.innerHTML = '✅ انتهت الدراسة العربية! تهانينا!';
+                } else if (prefix === 'english') {
+                    messageElement.innerHTML = '✅ انتهت الدراسة الإنجليزية! تهانينا!';
+                } else if (prefix === 'exam') {
+                    messageElement.innerHTML = '✅ بدأت الامتحانات الوزارية! بالتوفيق!';
                 }
             } else {
                 // حساب الوقت المتبقي
@@ -270,21 +507,56 @@
                 const messageElement = document.getElementById(`${prefix}-message`);
                 if (messageElement) {
                     let message = '';
-                    if (days <= 7) {
-                        message = 'بقي أقل من أسبوع! ركز على المراجعة النهائية!';
+                    if (days <= 3) {
+                        if (prefix === 'exam') {
+                            message = '⚠️ الامتحانات وشيكة! استعد جيداً!';
+                        } else if (prefix === 'arabic') {
+                            message = '⚠️ الأيام الأخيرة! ركز على المراجعة النهائية!';
+                        } else {
+                            message = '⚠️ الأيام الأخيرة! ركز على المراجعة النهائية!';
+                        }
+                    } else if (days <= 7) {
+                        if (prefix === 'exam') {
+                            message = '⏳ بقي أقل من أسبوع! استعد للامتحانات!';
+                        } else if (prefix === 'arabic') {
+                            message = '⏳ بقي أقل من أسبوع! كثف المراجعة!';
+                        } else {
+                            message = '⏳ بقي أقل من أسبوع! كثف المراجعة!';
+                        }
                     } else if (days <= 30) {
-                        message = 'بقي أقل من شهر! كثف جهودك!';
+                        if (prefix === 'exam') {
+                            message = '🏃 بقي أقل من شهر! جهز نفسك للامتحانات!';
+                        } else if (prefix === 'arabic') {
+                            message = '🏃 بقي أقل من شهر! كثف جهودك!';
+                        } else {
+                            message = '🏃 بقي أقل من شهر! كثف جهودك!';
+                        }
                     } else {
                         if (prefix === 'arabic') {
                             message = 'تاريخ الانتهاء: ٢٩ يونيو ٢٠٢٥';
-                        } else {
+                        } else if (prefix === 'english') {
                             message = 'تاريخ الانتهاء: ١ يوليو ٢٠٢٥';
+                        } else if (prefix === 'exam') {
+                            message = 'موعد بدء الامتحانات: ١٤ يونيو ٢٠٢٥، الساعة ٧:٠٠ صباحاً';
                         }
                     }
                     messageElement.innerHTML = message;
                 }
             }
         }
+        
+        // إضافة تأثير بسيط عند التمرير
+        window.addEventListener('scroll', function() {
+            const containers = document.querySelectorAll('.container, .countdown-container');
+            containers.forEach(container => {
+                const position = container.getBoundingClientRect().top;
+                const windowHeight = window.innerHeight;
+                if (position < windowHeight) {
+                    container.style.opacity = 1;
+                    container.style.transform = 'translateY(0)';
+                }
+            });
+        });
         
         // بدء تشغيل العدادين فور تحميل الصفحة
         updateCountdowns();
