@@ -1,235 +1,209 @@
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<!doctype html>
+<html lang="ar">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>صلاة الغفيلة</title>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Scheherazade+New:wght@400;700&display=swap');
-        
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body {
-            font-family: 'Amiri', serif;
-            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
-            color: #2c3e50;
-            line-height: 1.8;
-            padding: 20px;
-        }
-        
-        .container {
-            max-width: 210mm;
-            margin: 0 auto;
-            background: white;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
-            border-radius: 10px;
-            overflow: hidden;
-        }
-        
-        .header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 40px 30px;
-            text-align: center;
-            position: relative;
-        }
-        
-        .header::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="islamic" patternUnits="userSpaceOnUse" width="20" height="20"><path d="M10 0L20 10L10 20L0 10z" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="0.5"/></pattern></defs><rect width="100" height="100" fill="url(%23islamic)"/></svg>');
-            opacity: 0.3;
-        }
-        
-        .header h1 {
-            font-size: 2.5em;
-            font-weight: 700;
-            margin-bottom: 10px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-            position: relative;
-            z-index: 1;
-        }
-        
-        .header .subtitle {
-            font-size: 1.2em;
-            opacity: 0.9;
-            position: relative;
-            z-index: 1;
-        }
-        
-        .content {
-            padding: 40px 30px;
-        }
-        
-        .prayer-section {
-            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-            border-radius: 15px;
-            padding: 25px;
-            margin-bottom: 25px;
-            border-left: 5px solid #667eea;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
-        }
-        
-        .prayer-section h2 {
-            color: #495057;
-            font-size: 1.4em;
-            margin-bottom: 15px;
-            font-weight: 700;
-            display: flex;
-            align-items: center;
-        }
-        
-        .prayer-section h2::before {
-            content: '◆';
-            color: #667eea;
-            margin-left: 10px;
-        }
-        
-        .verse {
-            background: linear-gradient(135deg, #fff8e1 0%, #fffbf0 100%);
-            border: 2px solid #ffd54f;
-            border-radius: 12px;
-            padding: 20px;
-            margin: 15px 0;
-            font-size: 1.1em;
-            line-height: 2;
-            box-shadow: 0 3px 10px rgba(255, 213, 79, 0.2);
-        }
-        
-        .dua {
-            background: linear-gradient(135deg, #e8f5e8 0%, #f0f8f0 100%);
-            border: 2px solid #81c784;
-            border-radius: 12px;
-            padding: 20px;
-            margin: 15px 0;
-            font-size: 1.05em;
-            line-height: 1.9;
-            box-shadow: 0 3px 10px rgba(129, 199, 132, 0.2);
-        }
-        
-        .instruction {
-            color: #6c757d;
-            font-style: italic;
-            margin-bottom: 10px;
-            font-size: 0.95em;
-        }
-        
-        .dedication {
-            background: linear-gradient(135deg, #fce4ec 0%, #f8bbd9 100%);
-            border-radius: 15px;
-            padding: 25px;
-            margin-top: 30px;
-            text-align: center;
-            border: 2px solid #e91e63;
-            box-shadow: 0 5px 15px rgba(233, 30, 99, 0.2);
-        }
-        
-        .dedication h3 {
-            color: #ad1457;
-            font-size: 1.3em;
-            margin-bottom: 10px;
-            font-weight: 700;
-        }
-        
-        .dedication p {
-            color: #880e4f;
-            font-size: 1.1em;
-            font-weight: 500;
-        }
-        
-        .divider {
-            height: 3px;
-            background: linear-gradient(90deg, #667eea, #764ba2);
-            margin: 20px 0;
-            border-radius: 2px;
-        }
-        
-        .footer {
-            background: linear-gradient(135deg, #37474f 0%, #263238 100%);
-            color: white;
-            padding: 20px;
-            text-align: center;
-            font-size: 0.9em;
-            opacity: 0.8;
-        }
-        
-        @media print {
-            body {
-                background: white;
-                padding: 0;
-            }
-            
-            .container {
-                box-shadow: none;
-                border-radius: 0;
-            }
-            
-            .header, .prayer-section, .verse, .dua, .dedication {
-                break-inside: avoid;
-            }
-        }
-    </style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>تشفيري — أداة التشفير الشخصية</title>
+  <style>
+    :root{--bg:#0f1724;--card:#0b1220;--muted:#9aa6bf;--accent:#60a5fa;--glass:rgba(255,255,255,0.03)}
+    html,body{height:100%;margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,'Noto Naskh Arabic',sans-serif;background:linear-gradient(180deg,#071027 0%,#081228 100%);color:#e6eef8}
+    .wrap{max-width:980px;margin:32px auto;padding:20px}
+    h1{font-size:20px;margin:0 0 12px}
+    .grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+    .card{background:var(--card);padding:14px;border-radius:12px;box-shadow:0 6px 24px rgba(2,6,23,0.6)}
+    label{display:block;font-size:13px;color:var(--muted);margin-bottom:6px}
+    textarea,input,select{width:100%;box-sizing:border-box;border-radius:8px;padding:10px;border:1px solid rgba(255,255,255,0.04);background:linear-gradient(180deg,rgba(255,255,255,0.02),transparent);color:inherit}
+    textarea{min-height:100px;resize:vertical}
+    .row{display:flex;gap:8px}
+    button{background:var(--accent);border:none;color:#021028;padding:8px 12px;border-radius:8px;cursor:pointer}
+    pre{white-space:pre-wrap;word-wrap:break-word;background:var(--glass);padding:10px;border-radius:8px;color:var(--muted);font-family:inherit}
+    .small{font-size:12px;color:var(--muted)}
+    .foot{margin-top:12px;font-size:13px;color:var(--muted)}
+    @media(max-width:880px){.grid{grid-template-columns:1fr}}
+  </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h1>صلاة الغفيلة</h1>
-            <p class="subtitle">وهي ركعتان بين المغرب والعشاء</p>
+  <div class="wrap">
+    <h1>تشفيري — أداة التشفير الشخصية (تعمل بالكامل محليًا)</h1>
+    <p class="small">الموقع يعمل في المتصفح فقط — لا تُرفع بيانات إلى أي خادم. افتراضيًا: يتم تحويل العربية لكتابة إنجليزية (transliteration) ثم تُحول الحروف الإنجليزية إلى أرقام بحسب ترتيب الأبجدية بالعكس ثم يُطبق مفتاح الدوران.</p>
+
+    <div class="grid">
+      <div class="card">
+        <label>نص بالعربية (أو نسخ من مفكرة):</label>
+        <textarea id="inputArabic" placeholder="اكتب هنا...
+مثال: كتاب"></textarea>
+
+        <div style="margin-top:8px" class="row">
+          <div style="flex:1">
+            <label>مفتاح الدوران (افتراضي 42):</label>
+            <input id="keyInput" type="number" value="42" />
+          </div>
+          <div style="width:140px">
+            <label>وضع التدوير (Modulo):</label>
+            <select id="modToggle">
+              <option value="on">شغّل (يبقي الأرقام ضمن 1..26)</option>
+              <option value="off">أوقف (الأرقام قد تصبح كبيرة)</option>
+            </select>
+          </div>
         </div>
-        
-        <div class="content">
-            <div class="prayer-section">
-                <h2>الركعة الأولى</h2>
-                <p class="instruction">في الركعة الأولى بعد الحمد:</p>
-                <div class="verse">
-                    ﴿وَذَا النُّونِ إِذْ ذَّهَبَ مُغَاضِبًا فَظَنَّ أَن لَّن نَّقْدِرَ عَلَيْهِ فَنَادَىٰ فِي الظُّلُمَاتِ أَن لَّا إِلَٰهَ إِلَّا أَنتَ سُبْحَانَكَ إِنِّي كُنتُ مِنَ الظَّالِمِينَ﴾
-                    <br><br>
-                    فاستجبنا له ونجيناه من الغم وكذلك ننجي المؤمنين
-                </div>
-            </div>
-            
-            <div class="divider"></div>
-            
-            <div class="prayer-section">
-                <h2>الركعة الثانية</h2>
-                <p class="instruction">وفي الركعة الثانية بعد الحمد:</p>
-                <div class="verse">
-                    ﴿وَعِندَهُ مَفَاتِحُ الْغَيْبِ لَا يَعْلَمُهَا إِلَّا هُوَ وَيَعْلَمُ مَا فِي الْبَرِّ وَالْبَحْرِ وَمَا تَسْقُطُ مِن وَرَقَةٍ إِلَّا يَعْلَمُهَا وَلَا حَبَّةٍ فِي ظُلُمَاتِ الْأَرْضِ وَلَا رَطْبٍ وَلَا يَابِسٍ إِلَّا فِي كِتَابٍ مُّبِينٍ﴾
-                </div>
-            </div>
-            
-            <div class="divider"></div>
-            
-            <div class="prayer-section">
-                <h2>القنوت</h2>
-                <p class="instruction">وفي القنوت تقرأ هذا الدعاء:</p>
-                <div class="dua">
-                    اللهم إني أسألك بمفاتح الغيب التي لا يعلمها إلا أنت<br>
-                    أن تصلي على محمد وآل محمد<br>
-                    وأن تفعل بي كذا وكذا<br>
-                    <span class="instruction">(وتطلب حاجتك، ثم تكمل الدعاء)</span><br>
-                    اللهم أنت ولي نعمتي، والقادر على طلبتي، تعلم حاجتي<br>
-                    فأسألك بحق محمد وآله إلا ما قضيتها لي يا أرحم الراحمين
-                </div>
-            </div>
-            
-            <div class="dedication">
-                <h3>الهدية</h3>
-                <p>إلى أرواح شيعة أمير المؤمنين والأئمة الأطهار (عليهم السلام)</p>
-            </div>
+
+        <div style="margin-top:10px" class="row">
+          <button id="encryptBtn">تشفير</button>
+          <button id="decryptBtn">فك التشفير</button>
+          <button id="clearBtn">مسح</button>
+          <button id="downloadBtn">تحميل HTML</button>
         </div>
-        
-        <div class="footer">
-            <p>بسم الله الرحمن الرحيم • صلاة الغفيلة</p>
-        </div>
+
+        <p class="foot">خيارات متقدمة: يمكنك تعديل جدول الـ transliteration داخل الشيفرة إن رغبت، أو استخدام زر "فك التشفير" لإرجاع النص الأصلي إن كنت تعرف المفتاح ووضع التدوير.</p>
+      </div>
+
+      <div class="card">
+        <label>النتيجة — الكتابة الإنجليزية (transliteration):</label>
+        <pre id="latinOut">-</pre>
+
+        <label style="margin-top:8px">النتيجة — أرقام بعد تطبيق ترتيب الأبجدية بالعكس ثم مفتاح الدوران:</label>
+        <pre id="numbersOut">-</pre>
+
+        <label style="margin-top:8px">فك الشفرة (نص مفكوك):</label>
+        <pre id="decodedOut">-</pre>
+      </div>
     </div>
+
+    <div style="margin-top:16px" class="card">
+      <h3 style="margin-top:0">شرح سريع للآلية التي يعتمدها الموقع</h3>
+      <ul class="small">
+        <li>1) تحويل الحروف العربية لحروف إنجليزية تقريبية (مثال: "ك" → "k", "ت" → "t").</li>
+        <li>2) لكل حرف لاتيني نأخذ موقعه في الأبجدية الإنجليزية (a..z -> 1..26) <strong>لكن بالعكس</strong> (a→26, b→25, c→24, ... , z→1).</li>
+        <li>3) نضيف مفتاح الدوران (موجب) لكل قيمة. إن كان وضع التدوير مفعلًا، نطبّق modulo 26 بحيث تبقى النتائج بين 1 و26، وإذا كان مُطفأ فالأرقام ليست مقيدة.</li>
+        <li>4) العرض النهائي بالأرقام مفصولة بعلامة "'" كما رغبت.</li>
+      </ul>
+    </div>
+  </div>
+
+<script>
+// --- جدول تبسيطي للتحويل من العربية إلى كتابة "إنجليزية" (transliteration)
+// يمكنك تعديله أو توسيعه حسب احتياجك
+const arToLat = {
+  'ا':'a','أ':'a','إ':'a','آ':'aa','ب':'b','ت':'t','ث':'th','ج':'j','ح':'h','خ':'kh',
+  'د':'d','ذ':'dh','ر':'r','ز':'z','س':'s','ش':'sh','ص':'s','ض':'d','ط':'t','ظ':'z',
+  'ع':'a','غ':'gh','ف':'f','ق':'q','ك':'k','ل':'l','م':'m','ن':'n','ه':'h','و':'w','ي':'y',
+  'ى':'a','ء':'','ئ':'','ؤ':'','ة':'h','ً':'','ٌ':'','ٍ':'','َ':'','ُ':'','ِ':'','ْ':'','ّ':''
+};
+
+function transliterateArabic(text){
+  let out='';
+  for(let ch of text){
+    if(arToLat.hasOwnProperty(ch)) out += arToLat[ch];
+    else if(/\s/.test(ch)) out += ' ';
+    else out += ch; // إن كان حرف لاتيني أو رقم، نحتفظ به
+  }
+  // نظف المسافات المكررة
+  return out.replace(/\s+/g,' ').trim();
+}
+
+// دالة لتحويل حرف لاتيني مفرد إلى ترتيبه بالعكس: a->26, b->25, ..., z->1
+function reversedAlphaIndex(letter){
+  const a = letter.toLowerCase();
+  if(a < 'a' || a > 'z') return null;
+  const idx = a.charCodeAt(0) - 'a'.charCodeAt(0) + 1; // 1..26
+  return 27 - idx; // بالعكس: 26..1
+}
+
+function encryptText(arabicText, key, useModulo=true){
+  const latin = transliterateArabic(arabicText);
+  const parts = [];
+  for(let i=0;i<latin.length;i++){
+    const ch = latin[i];
+    if(/\s/.test(ch)) { parts.push('\n'); continue; }
+    // لدعم digraphs مثل 'sh','kh','th'، نجرب التقاط ثنائي
+    let two = latin.substr(i,2).toLowerCase();
+    let handleTwo = false;
+    let num = null;
+    if(['sh','kh','th','dh','gh'].includes(two)){
+      // خريطة مبسطة لبعض الثنائيات (تعطي قيمة للحرف الأول فقط هنا)
+      // بدلاً من تعقيد، سنفكك الثنائي إلى حروف مفردة في التشفير الحالي.
+      handleTwo = false;
+    }
+    num = reversedAlphaIndex(ch);
+    if(num===null){
+      // إن كان رقمًا أو حرفًا غير لاتيني، احتفظ به كرمز
+      parts.push(ch);
+    } else {
+      let v = num + Number(key);
+      if(useModulo){
+        v = ((v - 1) % 26) + 1;
+      }
+      parts.push(String(v));
+    }
+  }
+  return {latin: latin, numbers: parts};
+}
+
+function decryptNumbers(numberParts, key, useModulo=true){
+  const chars = [];
+  for(const p of numberParts){
+    if(p==='\n'){ chars.push('\n'); continue; }
+    const n = Number(p);
+    if(!Number.isFinite(n) || p.trim()==='') { chars.push(p); continue; }
+    let v = n - Number(key);
+    if(useModulo){
+      v = ((v - 1) % 26) + 1;
+      if(v<=0) v += 26;
+    }
+    const originalIdx = 27 - v; // 1..26
+    const ch = String.fromCharCode('a'.charCodeAt(0) + originalIdx - 1);
+    chars.push(ch);
+  }
+  return chars.join('');
+}
+
+// تهيئة الأزرار
+const inputArabic = document.getElementById('inputArabic');
+const encryptBtn = document.getElementById('encryptBtn');
+const decryptBtn = document.getElementById('decryptBtn');
+const clearBtn = document.getElementById('clearBtn');
+const downloadBtn = document.getElementById('downloadBtn');
+const latinOut = document.getElementById('latinOut');
+const numbersOut = document.getElementById('numbersOut');
+const decodedOut = document.getElementById('decodedOut');
+const keyInput = document.getElementById('keyInput');
+const modToggle = document.getElementById('modToggle');
+
+encryptBtn.addEventListener('click', ()=>{
+  const key = Number(keyInput.value) || 0;
+  const useModulo = modToggle.value === 'on';
+  const res = encryptText(inputArabic.value || '', key, useModulo);
+  latinOut.textContent = res.latin || '-';
+  const numStr = res.numbers.map(x=> (x==='\n'?"\n": (typeof x==='string' && /\D/.test(x)? x : x + "'"))).join(' ');
+  numbersOut.textContent = numStr || '-';
+  decodedOut.textContent = '-';
+});
+
+decryptBtn.addEventListener('click', ()=>{
+  const key = Number(keyInput.value) || 0;
+  const useModulo = modToggle.value === 'on';
+  const numsText = numbersOut.textContent;
+  const raw = numsText.replace(/'/g,' ').replace(/\n/g,' \n ');
+  const parts = raw.split(/\s+/).filter(s=>s.length>0);
+  const plainLatin = decryptNumbers(parts, key, useModulo);
+  decodedOut.textContent = plainLatin;
+  latinOut.textContent = transliterateArabic(inputArabic.value || '');
+});
+
+clearBtn.addEventListener('click', ()=>{
+  inputArabic.value='';latinOut.textContent='-';numbersOut.textContent='-';decodedOut.textContent='-';
+});
+
+downloadBtn.addEventListener('click', ()=>{
+  const content = document.documentElement.outerHTML;
+  const blob = new Blob([content], {type: 'text/html;charset=utf-8'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'tashfiri.html';
+  a.click();
+  URL.revokeObjectURL(url);
+});
+</script>
 </body>
 </html>
