@@ -1,27 +1,66 @@
 <!DOCTYPE html>
 <html lang="ar">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>أداة التشفير وفك التشفير الشخصية</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>أداة التشفير الآمن - CryptoGuard Pro</title>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@100;200;300;400;500;600;700;800;900&family=Space+Mono:wght@400;700&display=swap');
     
+    :root {
+      --bg-primary: #0a0a0f;
+      --bg-secondary: #151520;
+      --bg-card: rgba(255, 255, 255, 0.04);
+      --bg-card-hover: rgba(255, 255, 255, 0.06);
+      --bg-input: rgba(255, 255, 255, 0.08);
+      --bg-input-focus: rgba(255, 255, 255, 0.12);
+      
+      --accent-primary: #6366f1;
+      --accent-primary-hover: #4f46e5;
+      --accent-secondary: #10b981;
+      --accent-secondary-hover: #059669;
+      --accent-danger: #ef4444;
+      
+      --text-primary: #ffffff;
+      --text-secondary: rgba(255, 255, 255, 0.75);
+      --text-tertiary: rgba(255, 255, 255, 0.55);
+      
+      --border-primary: rgba(255, 255, 255, 0.12);
+      --border-focus: rgba(99, 102, 241, 0.6);
+      
+      --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.15);
+      --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.2);
+      --shadow-lg: 0 20px 40px rgba(0, 0, 0, 0.25);
+      --shadow-glow: 0 0 20px rgba(99, 102, 241, 0.3);
+      
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 16px;
+      --radius-xl: 20px;
+      
+      --spacing-xs: 8px;
+      --spacing-sm: 12px;
+      --spacing-md: 16px;
+      --spacing-lg: 24px;
+      --spacing-xl: 32px;
+      --spacing-2xl: 48px;
+    }
+
     * {
+      box-sizing: border-box;
       margin: 0;
       padding: 0;
-      box-sizing: border-box;
     }
 
     body {
-      font-family: 'Cairo', sans-serif;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      color: #fff;
+      font-family: 'Noto Sans Arabic', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+      color: var(--text-primary);
       direction: rtl;
+      padding: var(--spacing-lg);
       min-height: 100vh;
-      padding: 20px;
-      position: relative;
-      overflow-x: hidden;
+      line-height: 1.7;
+      font-weight: 400;
     }
 
     /* خلفية متحركة */
@@ -30,526 +69,618 @@
       position: fixed;
       top: 0;
       left: 0;
-      width: 100%;
-      height: 100%;
+      right: 0;
+      bottom: 0;
       background: 
-        radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
-        radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.15) 0%, transparent 50%),
-        radial-gradient(circle at 40% 40%, rgba(120, 219, 255, 0.15) 0%, transparent 50%);
-      animation: float 20s ease-in-out infinite;
+        radial-gradient(circle at 25% 75%, rgba(99, 102, 241, 0.08) 0%, transparent 60%),
+        radial-gradient(circle at 75% 25%, rgba(16, 185, 129, 0.08) 0%, transparent 60%);
+      pointer-events: none;
       z-index: -1;
     }
 
-    @keyframes float {
-      0%, 100% { transform: translateY(0px) rotate(0deg); }
-      50% { transform: translateY(-20px) rotate(5deg); }
-    }
-
-    .main-container {
-      max-width: 1200px;
+    .container {
+      max-width: 950px;
       margin: 0 auto;
     }
 
-    h1 {
+    .header {
       text-align: center;
-      margin-bottom: 40px;
-      font-size: 2.5rem;
+      margin-bottom: var(--spacing-2xl);
+      padding: var(--spacing-2xl) var(--spacing-xl);
+      background: var(--bg-card);
+      border-radius: var(--radius-xl);
+      border: 1px solid var(--border-primary);
+      backdrop-filter: blur(20px);
+      box-shadow: var(--shadow-lg);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .header::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary));
+    }
+
+    .header h1 {
+      font-size: 2.8rem;
       font-weight: 700;
-      background: linear-gradient(45deg, #fff, #e0e7ff);
+      margin-bottom: var(--spacing-md);
+      background: linear-gradient(135deg, #ffffff 0%, var(--accent-primary) 50%, var(--accent-secondary) 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
-      text-shadow: 0 4px 10px rgba(0,0,0,0.3);
-      user-select: none;
+      letter-spacing: -0.02em;
     }
 
-    .tools-container {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-      gap: 30px;
-      align-items: start;
+    .header .subtitle {
+      font-size: 1.15rem;
+      color: var(--text-secondary);
+      font-weight: 400;
+      max-width: 650px;
+      margin: 0 auto;
+      line-height: 1.6;
     }
 
-    .container {
-      background: rgba(255, 255, 255, 0.1);
+    .section {
+      background: var(--bg-card);
+      padding: var(--spacing-xl);
+      border-radius: var(--radius-lg);
+      margin-bottom: var(--spacing-lg);
+      border: 1px solid var(--border-primary);
       backdrop-filter: blur(20px);
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      padding: 30px;
-      border-radius: 20px;
-      box-shadow: 
-        0 8px 32px rgba(0, 0, 0, 0.3),
-        inset 0 1px 0 rgba(255, 255, 255, 0.2);
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      box-shadow: var(--shadow-md);
+      transition: all 0.3s ease;
     }
 
-    .container:hover {
-      transform: translateY(-5px);
-      box-shadow: 
-        0 15px 40px rgba(0, 0, 0, 0.4),
-        inset 0 1px 0 rgba(255, 255, 255, 0.3);
+    .section:hover {
+      background: var(--bg-card-hover);
+      box-shadow: var(--shadow-lg);
+      transform: translateY(-2px);
     }
 
-    .container-title {
-      font-size: 1.4rem;
+    .section h2 {
+      font-size: 1.5rem;
+      margin-bottom: var(--spacing-lg);
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-sm);
       font-weight: 600;
-      margin-bottom: 25px;
-      text-align: center;
-      color: #fff;
-      padding-bottom: 15px;
-      border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+      letter-spacing: -0.01em;
+    }
+
+    .form-group {
+      margin-bottom: var(--spacing-lg);
     }
 
     label {
       display: block;
-      margin-bottom: 8px;
-      font-weight: 600;
-      color: rgba(255, 255, 255, 0.9);
-      user-select: none;
+      margin-bottom: var(--spacing-xs);
+      font-weight: 500;
+      color: var(--text-primary);
       font-size: 0.95rem;
+      letter-spacing: 0.005em;
     }
 
-    textarea, input[type=text] {
+    input, textarea {
       width: 100%;
-      padding: 15px 18px;
-      border-radius: 12px;
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      background: rgba(255, 255, 255, 0.1);
+      padding: var(--spacing-md) var(--spacing-md);
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-primary);
+      background: var(--bg-input);
+      color: var(--text-primary);
+      font-size: 1rem;
+      font-family: inherit;
+      font-weight: 400;
       backdrop-filter: blur(10px);
-      color: #fff;
-      font-size: 16px;
-      font-family: 'Cairo', sans-serif;
-      resize: vertical;
-      outline: none;
-      transition: all 0.3s ease;
-      margin-bottom: 15px;
+      transition: all 0.2s ease;
+      resize: none;
     }
 
-    textarea:focus, input[type=text]:focus {
-      border-color: rgba(255, 255, 255, 0.5);
-      background: rgba(255, 255, 255, 0.15);
-      box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.1);
+    input::placeholder, textarea::placeholder {
+      color: var(--text-tertiary);
+      font-weight: 300;
+    }
+
+    input:focus, textarea:focus {
+      outline: none;
+      border-color: var(--border-focus);
+      background: var(--bg-input-focus);
+      box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.12), var(--shadow-glow);
       transform: translateY(-1px);
     }
 
-    textarea::placeholder, input[type=text]::placeholder {
-      color: rgba(255, 255, 255, 0.6);
+    textarea {
+      min-height: 120px;
+      line-height: 1.6;
+    }
+
+    .button-group {
+      display: flex;
+      gap: var(--spacing-md);
+      margin-top: var(--spacing-lg);
     }
 
     button {
-      width: 100%;
-      padding: 15px;
-      margin: 10px 0;
-      background: linear-gradient(45deg, #667eea, #764ba2);
-      color: #fff;
-      font-weight: 700;
-      font-size: 16px;
-      font-family: 'Cairo', sans-serif;
+      padding: var(--spacing-md) var(--spacing-lg);
+      border-radius: var(--radius-md);
       border: none;
-      border-radius: 12px;
+      font-size: 1rem;
+      font-weight: 600;
       cursor: pointer;
-      user-select: none;
-      transition: all 0.3s ease;
-      box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+      transition: all 0.2s ease;
+      font-family: inherit;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--spacing-xs);
+      min-height: 54px;
+      letter-spacing: 0.01em;
       position: relative;
       overflow: hidden;
     }
 
-    button::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: -100%;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-      transition: left 0.5s;
+    .btn-primary {
+      background: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-primary-hover) 100%);
+      color: white;
+      flex: 1;
+      box-shadow: var(--shadow-sm);
     }
 
-    button:hover::before {
-      left: 100%;
-    }
-
-    button:hover {
+    .btn-primary:hover {
+      background: linear-gradient(135deg, var(--accent-primary-hover) 0%, #3730a3 100%);
       transform: translateY(-2px);
-      box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+      box-shadow: var(--shadow-md);
     }
 
-    button:active {
+    .btn-primary:active {
       transform: translateY(0);
     }
 
-    .result-container {
-      margin-top: 20px;
-      position: relative;
+    .btn-secondary {
+      background: linear-gradient(135deg, var(--accent-secondary) 0%, var(--accent-secondary-hover) 100%);
+      color: white;
+      flex: 0 0 auto;
+      min-width: 150px;
+      box-shadow: var(--shadow-sm);
     }
 
-    .result-box {
-      background: rgba(0, 0, 0, 0.2);
-      backdrop-filter: blur(10px);
-      min-height: 80px;
-      padding: 15px;
-      border-radius: 12px;
-      font-family: 'Courier New', monospace;
-      font-size: 14px;
-      color: #e0e7ff;
-      overflow-wrap: break-word;
-      user-select: text;
-      white-space: pre-wrap;
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      margin-bottom: 10px;
+    .btn-secondary:hover {
+      background: linear-gradient(135deg, var(--accent-secondary-hover) 0%, #047857 100%);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .btn-secondary:disabled {
+      background: linear-gradient(135deg, #4b5563 0%, #374151 100%);
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+      opacity: 0.6;
+    }
+
+    .checkbox-group {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-sm);
+      padding: var(--spacing-md);
+      background: rgba(255, 255, 255, 0.02);
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-primary);
+      margin-top: var(--spacing-md);
+    }
+
+    .checkbox-group input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      margin: 0;
+      accent-color: var(--accent-primary);
+      cursor: pointer;
+    }
+
+    .checkbox-group label {
+      margin: 0;
+      font-weight: 400;
+      cursor: pointer;
+      font-size: 0.95rem;
       line-height: 1.5;
     }
 
-    .copy-btn {
-      width: auto;
-      padding: 8px 16px;
-      margin: 0;
-      background: linear-gradient(45deg, #10b981, #059669);
-      font-size: 14px;
-      border-radius: 8px;
-      box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
-      transition: all 0.2s ease;
+    #debug {
+      display: none;
+      white-space: pre-wrap;
+      overflow: auto;
+      margin-top: var(--spacing-md);
+      background: rgba(0, 0, 0, 0.4);
+      padding: var(--spacing-md);
+      border-radius: var(--radius-md);
+      height: 200px;
+      border: 1px solid var(--border-primary);
+      font-family: 'Space Mono', 'Consolas', 'Monaco', monospace;
+      font-size: 0.85rem;
+      line-height: 1.4;
+      font-weight: 400;
     }
 
-    .copy-btn:hover {
-      background: linear-gradient(45deg, #059669, #047857);
-      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
-    }
-
-    .copy-btn.copied {
-      background: linear-gradient(45deg, #7c3aed, #5b21b6);
-      transform: scale(0.95);
-    }
-
-    .result-actions {
-      display: flex;
-      justify-content: flex-end;
-      gap: 10px;
-      margin-top: 10px;
+    .message {
+      padding: var(--spacing-md);
+      border-radius: var(--radius-md);
+      margin-top: var(--spacing-md);
+      display: none;
+      align-items: center;
+      gap: var(--spacing-sm);
+      font-weight: 500;
+      backdrop-filter: blur(10px);
     }
 
     .success-message {
-      background: linear-gradient(45deg, #10b981, #059669);
-      color: white;
-      padding: 12px 20px;
-      border-radius: 8px;
-      margin: 10px 0;
-      font-size: 14px;
-      text-align: center;
-      opacity: 0;
-      transform: translateY(-10px);
-      transition: all 0.3s ease;
+      background: rgba(16, 185, 129, 0.12);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      color: var(--accent-secondary);
     }
 
-    .success-message.show {
-      opacity: 1;
-      transform: translateY(0);
+    .error-message {
+      background: rgba(239, 68, 68, 0.12);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      color: var(--accent-danger);
     }
 
-    .icon {
-      display: inline-block;
-      margin-left: 8px;
-      font-size: 16px;
+    .message .icon {
+      font-size: 1.125rem;
+      flex-shrink: 0;
     }
 
+    /* تحسينات للشاشات الصغيرة */
     @media (max-width: 768px) {
-      .tools-container {
-        grid-template-columns: 1fr;
-        gap: 20px;
+      body {
+        padding: var(--spacing-md);
       }
       
-      .container {
-        padding: 20px;
+      .header {
+        padding: var(--spacing-lg);
+        margin-bottom: var(--spacing-lg);
       }
       
-      h1 {
-        font-size: 2rem;
+      .header h1 {
+        font-size: 2.2rem;
+      }
+      
+      .header .subtitle {
+        font-size: 1rem;
+      }
+      
+      .section {
+        padding: var(--spacing-lg);
+      }
+      
+      .button-group {
+        flex-direction: column;
+      }
+
+      .btn-secondary {
+        min-width: auto;
       }
     }
 
-    .fade-in {
-      animation: fadeIn 0.6s ease-out;
+    /* تحسينات الـ scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
     }
 
-    @keyframes fadeIn {
-      from {
-        opacity: 0;
-        transform: translateY(20px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
+    ::-webkit-scrollbar-track {
+      background: var(--bg-secondary);
     }
 
-    .loading {
-      position: relative;
-      overflow: hidden;
+    ::-webkit-scrollbar-thumb {
+      background: var(--border-primary);
+      border-radius: 4px;
     }
 
-    .loading::after {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: -100%;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-      animation: loading 1.5s infinite;
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(255, 255, 255, 0.25);
     }
 
-    @keyframes loading {
-      0% { left: -100%; }
-      100% { left: 100%; }
+    /* تحسين التركيز للوصولية */
+    button:focus-visible,
+    input:focus-visible,
+    textarea:focus-visible {
+      outline: 2px solid var(--accent-primary);
+      outline-offset: 2px;
     }
   </style>
 </head>
 <body>
-  <div class="main-container">
-    <h1 class="fade-in">🔐 أداة التشفير وفك التشفير الشخصية</h1>
+  <div class="container">
+    <div class="header">
+      <h1>🛡️ التشفير الآمن</h1>
+      <p class="subtitle">سوف يتم دق العالم زيجًا</p></p>
+    </div>
 
-    <div class="tools-container">
-      <div class="container fade-in" id="encryptSection">
-        <h2 class="container-title">🔒 تشفير النص</h2>
-        
-        <label for="inputTextEncrypt">النص الأصلي للتشفير:</label>
-        <textarea id="inputTextEncrypt" rows="4" placeholder="أدخل النص الذي تريد تشفيره هنا..."></textarea>
-
-        <label for="inputKeyEncrypt">المفتاح الرقمي (أرقام مفصولة بفاصلة أو فاصلة عليا '):</label>
-        <input type="text" id="inputKeyEncrypt" placeholder="مثال: 6'12'18 أو 6,12,18" value="6'12'18" />
-
-        <button onclick="encrypt()">
-          <span class="icon">🔐</span>
-          تشفير النص
-        </button>
-
-        <div class="success-message" id="encryptSuccess">
-          تم التشفير بنجاح! ✅
-        </div>
-
-        <div class="result-container">
-          <label>النتيجة - النص المشفر:</label>
-          <div class="result-box" id="outputEncrypt"></div>
-          <div class="result-actions">
-            <button class="copy-btn" onclick="copyText('outputEncrypt', this)">
-              <span class="icon">📋</span>
-              نسخ النص المشفر
-            </button>
-          </div>
-        </div>
+    <div class="section">
+      <h2>⚙️ إعدادات التشفير</h2>
+      <div class="form-group">
+        <label>مفتاح التشفير</label>
+        <input id="keyInput" value="6,12,18" placeholder="أي أرقام مفصولة بفواصل أو مسافات، مثال: 6,12,18 أو 2026 2033 2021" />
       </div>
+      <div class="checkbox-group">
+        <input id="addMarker" type="checkbox" checked />
+        <label for="addMarker">تفعيل الحماية المتقدمة (يضمن أن النص مشفر من هذا الموقع)</label>
+      </div>
+      <div class="checkbox-group">
+        <input id="showDebug" type="checkbox" />
+        <label for="showDebug">عرض تفاصيل التشفير التقنية</label>
+      </div>
+      <div id="debug"></div>
+    </div>
 
-      <div class="container fade-in" id="decryptSection">
-        <h2 class="container-title">🔓 فك تشفير النص</h2>
-        
-        <label for="inputTextDecrypt">النص المشفر (أرقام مفصولة بـ ' ):</label>
-        <textarea id="inputTextDecrypt" rows="4" placeholder="أدخل النص المشفر هنا..."></textarea>
-
-        <label for="inputKeyDecrypt">المفتاح الرقمي (أرقام مفصولة بفاصلة أو فاصلة عليا '):</label>
-        <input type="text" id="inputKeyDecrypt" placeholder="مثال: 6'12'18 أو 6,12,18" value="6'12'18" />
-
-        <button onclick="decrypt()">
-          <span class="icon">🔓</span>
-          فك التشفير
+    <div class="section">
+      <h2>🔒 تشفير النص</h2>
+      <div class="form-group">
+        <label>النص المراد تشفيره</label>
+        <textarea id="plainText" rows="4" placeholder="اكتب هنا النص الذي تريد حمايته وتشفيره..."></textarea>
+      </div>
+      <div class="button-group">
+        <button class="btn-primary" onclick="encrypt()">
+          <span>🔐</span>
+          <span>تشفير النص</span>
         </button>
+      </div>
+      <div class="form-group">
+        <label>النص المشفر</label>
+        <textarea id="cipherText" rows="4" readonly placeholder="سيظهر هنا النص المشفر بعد الضغط على زر التشفير..."></textarea>
+      </div>
+      <div class="button-group">
+        <button id="copyBtn" class="btn-secondary" onclick="copyEncrypted()" disabled>
+          <span>📋</span>
+          <span>نسخ النص المشفر</span>
+        </button>
+      </div>
+      <div id="encryptSuccess" class="message success-message">
+        <span class="icon">✓</span>
+        <span>تم التشفير بنجاح! يمكنك الآن نسخ النص المشفر ومشاركته بأمان.</span>
+      </div>
+    </div>
 
-        <div class="success-message" id="decryptSuccess">
-          تم فك التشفير بنجاح! ✅
-        </div>
-
-        <div class="result-container">
-          <label>النتيجة - النص المفكوك:</label>
-          <div class="result-box" id="outputDecrypt"></div>
-          <div class="result-actions">
-            <button class="copy-btn" onclick="copyText('outputDecrypt', this)">
-              <span class="icon">📋</span>
-              نسخ النص المفكوك
-            </button>
-          </div>
-        </div>
+    <div class="section">
+      <h2>🔓 فك التشفير</h2>
+      <div class="form-group">
+        <label>النص المشفر</label>
+        <textarea id="cipherInput" rows="4" placeholder="الصق هنا النص المشفر الذي تريد فك تشفيره..."></textarea>
+      </div>
+      <div class="button-group">
+        <button class="btn-primary" onclick="decrypt()">
+          <span>🔓</span>
+          <span>فك التشفير</span>
+        </button>
+      </div>
+      <div class="form-group">
+        <label>النص الأصلي</label>
+        <textarea id="plainOutput" rows="4" readonly placeholder="سيظهر هنا النص الأصلي بعد فك التشفير بنجاح..."></textarea>
+      </div>
+      <div id="decryptSuccess" class="message success-message">
+        <span class="icon">✓</span>
+        <span>تم فك التشفير بنجاح!</span>
+      </div>
+      <div id="decryptError" class="message error-message">
+        <span class="icon">⚠️</span>
+        <span id="errorMessage">خطأ في فك التشفير</span>
       </div>
     </div>
   </div>
 
 <script>
-  const reversedAlphabet = 'zyxwvutsrqponmlkjihgfedcba';
+/* ===== قوائم + خرائط ===== */
+const AR_LETTERS = ['ا','ب','ت','ث','ج','ح','خ','د','ذ','ر','ز','س','ش','ص','ض','ط','ظ','ع','غ','ف','ق','ك','ل','م','ن','ه','و','ي'];
+const EN_LETTERS = 'abcdefghijklmnopqrstuvwxyz'.split('');
 
-  function charToNum(c) {
-    return reversedAlphabet.indexOf(c.toLowerCase()) + 1;
+const encodeMapAR = {}; AR_LETTERS.forEach((c,i)=> encodeMapAR[c]=i+1);
+const decodeMapAR = AR_LETTERS.slice();
+const encodeMapEN = {}; EN_LETTERS.forEach((c,i)=> encodeMapEN[c]=i+1);
+const decodeMapEN = EN_LETTERS.slice();
+
+/* ===== ماركرات رقمية ===== */
+const SYS_MARKER_TOKENS = ["14'","8'","21'"];         
+const LANG_MARKER_TOKENS = {
+  AR: ["26'","9'"],   
+  EN: ["22'","13'"]   
+};
+
+/* ===== عناصر واجهة ===== */
+const debugEl = document.getElementById('debug');
+function dbg(...args){
+  if(document.getElementById('showDebug').checked){
+    debugEl.style.display = 'block';
+    debugEl.textContent += args.join(' ') + '\n';
   }
+}
+function clearDbg(){ 
+  debugEl.textContent = ''; 
+  if(!document.getElementById('showDebug').checked) debugEl.style.display='none'; 
+}
+function showMessage(elementId, show = true) {
+  document.getElementById(elementId).style.display = show ? 'flex' : 'none';
+}
+function hideAllMessages() {
+  showMessage('encryptSuccess', false);
+  showMessage('decryptSuccess', false);
+  showMessage('decryptError', false);
+}
 
-  function numToChar(n) {
-    n = ((n - 1) % 26) + 1;
-    return reversedAlphabet.charAt(n - 1);
+/* ===== أدوات مساعدة ===== */
+function parseKey(){
+  const keyInput = document.getElementById('keyInput').value.trim();
+  if(!keyInput) return [];
+  let cleanInput = keyInput.replace(/'/g, '');
+  return cleanInput
+    .split(/[,\s]+/)
+    .map(s => {
+      const num = parseInt(s.trim(), 10);
+      return isNaN(num) ? null : num;
+    })
+    .filter(n => n !== null);
+}
+function charToNum(ch, lang){
+  if(lang==='AR') return encodeMapAR[ch] || null;
+  if(lang==='EN') return encodeMapEN[ch.toLowerCase()] || null;
+  return null;
+}
+function numToChar(num, lang){
+  if(lang==='AR') return decodeMapAR[num-1] || '';
+  if(lang==='EN') return decodeMapEN[num-1] || '';
+  return '';
+}
+
+/* ===== التشفير بدون تدوير ===== */
+function encryptTextToTokens(text, key, lang){
+  let keyIndex = 0;
+  const tokens = [];
+  dbg('المفتاح المستخدم:', key.join(','));
+  for(let ch of text){
+    const num = charToNum(ch, lang);
+    if(num){
+      const k = key[keyIndex % key.length];
+      const enc = num + k; // بدون % أو تدوير
+      tokens.push(enc + "'");
+      keyIndex++;
+      dbg(`حرف: ${ch} -> رقم: ${num} + مفتاح: ${k} = ${enc}`);
+    } else {
+      tokens.push(ch);
+    }
   }
+  return tokens.join(' ');
+}
 
-  function parseKey(keyStr) {
-    let cleanStr = keyStr.replace(/'/g, ',').replace(/\s+/g, '');
-    let parts = cleanStr.split(',');
-    let nums = [];
-    for(let p of parts){
-      let num = parseInt(p);
-      if(!isNaN(num)){
-        nums.push(((num - 1) % 26) + 1);
+/* ===== فك التشفير بدون تدوير ===== */
+function decryptTokensRange(tokens, key, lang, startIndex=0, endIndex = null){
+  let kIdx = 0;
+  let out = '';
+  const stop = (endIndex === null) ? tokens.length : endIndex;
+  dbg('فك التشفير - المفتاح:', key.join(','));
+  for(let i = startIndex; i < stop; i++){
+    const t = tokens[i];
+    if(/^\d+'$/.test(t)){
+      const num = parseInt(t.replace("'", ""), 10);
+      const k = key[kIdx % key.length];
+      const origNum = num - k; // بدون % أو تدوير
+      const char = numToChar(origNum, lang);
+      out += char;
+      dbg(`توكن: ${t} -> رقم: ${num} - مفتاح: ${k} = ${origNum} -> حرف: ${char}`);
+      kIdx++;
+    } else if(/^\s+$/.test(t)){
+      const run = t.length;
+      if(run >= 3){
+        out += ' '.repeat(run - 2);
       }
-    }
-    return nums;
-  }
-
-  function textToEnglish(text) {
-    const arabicToEnglish = {
-      'ا':'a','ب':'b','ت':'t','ث':'th','ج':'j','ح':'h','خ':'kh','د':'d','ذ':'dh','ر':'r','ز':'z','س':'s','ش':'sh','ص':'s','ض':'d','ط':'t','ظ':'z','ع':'a','غ':'gh','ف':'f','ق':'q','ك':'k','ل':'l','م':'m','ن':'n','ه':'h','و':'w','ي':'y','ء':'\'', 'ى':'a', 'ة':'h'
-    };
-    let result = '';
-    for(let ch of text.toLowerCase()){
-      if(/[a-z]/.test(ch)){
-        result += ch;
-      } else if (arabicToEnglish[ch]){
-        let val = arabicToEnglish[ch];
-        result += val.charAt(0);
-      }
-    }
-    return result;
-  }
-
-  function showSuccessMessage(elementId) {
-    const element = document.getElementById(elementId);
-    element.classList.add('show');
-    setTimeout(() => {
-      element.classList.remove('show');
-    }, 3000);
-  }
-
-  function addLoadingEffect(buttonElement) {
-    buttonElement.classList.add('loading');
-    setTimeout(() => {
-      buttonElement.classList.remove('loading');
-    }, 500);
-  }
-
-  async function copyText(elementId, buttonElement) {
-    const text = document.getElementById(elementId).textContent;
-    
-    if (!text.trim()) {
-      alert('لا يوجد نص لنسخه');
-      return;
-    }
-
-    try {
-      await navigator.clipboard.writeText(text);
-      
-      // تأثير بصري للزر
-      const originalText = buttonElement.innerHTML;
-      buttonElement.innerHTML = '<span class="icon">✅</span> تم النسخ';
-      buttonElement.classList.add('copied');
-      
-      setTimeout(() => {
-        buttonElement.innerHTML = originalText;
-        buttonElement.classList.remove('copied');
-      }, 2000);
-      
-    } catch (err) {
-      // طريقة بديلة للمتصفحات القديمة
-      const textArea = document.createElement('textarea');
-      textArea.value = text;
-      document.body.appendChild(textArea);
-      textArea.select();
-      document.execCommand('copy');
-      document.body.removeChild(textArea);
-      
-      alert('تم نسخ النص!');
+    } else {
+      out += t;
     }
   }
+  return out;
+}
 
-  function encrypt(){
-    const button = event.target;
-    addLoadingEffect(button);
-    
-    let input = document.getElementById('inputTextEncrypt').value.trim();
-    let keyStr = document.getElementById('inputKeyEncrypt').value.trim();
-
-    if(!input || !keyStr){
-      alert('يرجى إدخال النص والمفتاح');
-      return;
-    }
-
-    let key = parseKey(keyStr);
-    if(key.length === 0){
-      alert('المفتاح غير صالح');
-      return;
-    }
-
-    let engText = textToEnglish(input);
-    if(engText.length === 0){
-      alert('النص لا يحتوي على حروف إنجليزية أو عربية صالحة');
-      return;
-    }
-
-    let outputNums = [];
-    for(let i=0; i<engText.length; i++){
-      let c = engText.charAt(i);
-      let cNum = charToNum(c);
-      let kNum = key[i % key.length];
-      let encryptedNum = ((cNum + kNum - 1) % 26) + 1;
-      outputNums.push(encryptedNum + "'");
-    }
-
-    document.getElementById('outputEncrypt').textContent = outputNums.join(' ');
-    showSuccessMessage('encryptSuccess');
+/* ===== تشفير ===== */
+function encrypt(){
+  clearDbg();
+  hideAllMessages();
+  const plain = document.getElementById('plainText').value || '';
+  const key = parseKey();
+  if(key.length === 0){
+    document.getElementById('errorMessage').textContent = 'يرجى إدخال مفتاح التشفير';
+    showMessage('decryptError');
+    return; 
   }
-
-  function decrypt(){
-    const button = event.target;
-    addLoadingEffect(button);
-    
-    let input = document.getElementById('inputTextDecrypt').value.trim();
-    let keyStr = document.getElementById('inputKeyDecrypt').value.trim();
-
-    if(!input || !keyStr){
-      alert('يرجى إدخال النص المشفر والمفتاح');
-      return;
-    }
-
-    let key = parseKey(keyStr);
-    if(key.length === 0){
-      alert('المفتاح غير صالح');
-      return;
-    }
-
-    let parts = input.split("'").filter(p => p.trim() !== '');
-    let nums = [];
-    for(let p of parts){
-      let n = parseInt(p.trim());
-      if(!isNaN(n)){
-        nums.push(((n - 1) % 26) + 1);
-      }
-    }
-    if(nums.length === 0){
-      alert('النص المشفر غير صالح');
-      return;
-    }
-
-    let outputChars = [];
-    for(let i=0; i<nums.length; i++){
-      let n = nums[i];
-      let kNum = key[i % key.length];
-      let decryptedNum = n - kNum;
-      if(decryptedNum <= 0) decryptedNum += 26;
-      outputChars.push(numToChar(decryptedNum));
-    }
-
-    document.getElementById('outputDecrypt').textContent = outputChars.join('');
-    showSuccessMessage('decryptSuccess');
+  if(plain.trim() === '') {
+    document.getElementById('errorMessage').textContent = 'يرجى إدخال النص المراد تشفيره';
+    showMessage('decryptError');
+    return;
   }
+  try {
+    const useMarker = document.getElementById('addMarker').checked;
+    const lang = /[\u0600-\u06FF]/.test(plain) ? 'AR' : 'EN';
+    const encBody = encryptTextToTokens(plain, key, lang);
+    let final = encBody;
+    if(useMarker){
 
-  // تأثيرات تحميل الصفحة
-  window.addEventListener('load', () => {
-    const elements = document.querySelectorAll('.fade-in');
-    elements.forEach((el, index) => {
-      el.style.animationDelay = `${index * 0.1}s`;
-    });
-  });
+const sys = SYS_MARKER_TOKENS.join(' ');
+      const langMark = LANG_MARKER_TOKENS[lang].join(' ');
+      final = sys + ' ' + langMark + ' ' + encBody;
+    }
+    document.getElementById('cipherText').value = final;
+    document.getElementById('copyBtn').disabled = false;
+    showMessage('encryptSuccess');
+  } catch(error) {
+    document.getElementById('errorMessage').textContent = 'حدث خطأ في عملية التشفير';
+    showMessage('decryptError');
+  }
+}
+
+/* ===== فك التشفير ===== */
+function tokenizeCipher(cipher){
+  return cipher.match(/\d+'|\s+|[^\d\s]+/g) || [];
+}
+function matchSequenceAtStart(tokens, seq){
+  let i = 0;
+  for(let j = 0; j < seq.length; j++){
+    while(i < tokens.length && /^\s+$/.test(tokens[i])) i++;
+    if(i >= tokens.length) return -1;
+    if(tokens[i] !== seq[j]) return -1;
+    i++;
+  }
+  return i;
+}
+function detectNumericMarkerAtStart(tokens){
+  for(const lang of ['AR','EN']){
+    const sysEnd = matchSequenceAtStart(tokens, SYS_MARKER_TOKENS);
+    if(sysEnd === -1) return null;
+    const langSeq = LANG_MARKER_TOKENS[lang];
+    const langEnd = matchSequenceAtStart(tokens.slice(sysEnd), langSeq);
+    if(langEnd !== -1){
+      return { lang, markerEndTokenIndex: sysEnd + langEnd };
+    }
+  }
+  return null;
+}
+function decrypt(){
+  clearDbg();
+  hideAllMessages();
+  const cipher = document.getElementById('cipherInput').value || '';
+  const key = parseKey();
+  if(key.length === 0){
+    document.getElementById('errorMessage').textContent = 'يرجى إدخال مفتاح التشفير';
+    showMessage('decryptError');
+    return; 
+  }
+  if(cipher.trim() === '') {
+    document.getElementById('errorMessage').textContent = 'يرجى إدخال النص المشفر';
+    showMessage('decryptError');
+    return;
+  }
+  try {
+    const tokens = tokenizeCipher(cipher);
+    let lang = /[\u0600-\u06FF]/.test(cipher) ? 'AR' : 'EN';
+    const marker = detectNumericMarkerAtStart(tokens);
+    let startIndex = 0;
+    if(marker){
+      lang = marker.lang;
+      startIndex = marker.markerEndTokenIndex;
+    }
+    const plain = decryptTokensRange(tokens, key, lang, startIndex);
+    document.getElementById('plainOutput').value = plain;
+    showMessage('decryptSuccess');
+  } catch(error) {
+    document.getElementById('errorMessage').textContent = 'خطأ في فك التشفير';
+    showMessage('decryptError');
+  }
+}
+
+/* ===== نسخ النص ===== */
+function copyEncrypted(){
+  const cipherText = document.getElementById('cipherText');
+  cipherText.select();
+  document.execCommand('copy');
+}
 </script>
-
-</body>
-</html>
