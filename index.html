@@ -1,390 +1,555 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ar">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>تشفيري — أداة التشفير الشخصية</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>أداة التشفير وفك التشفير الشخصية</title>
   <style>
-    :root{--bg:#0f1724;--card:#0b1220;--muted:#9aa6bf;--accent:#60a5fa;--glass:rgba(255,255,255,0.03);--success:#10b981;--warning:#f59e0b}
-    html,body{height:100%;margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,'Noto Naskh Arabic',sans-serif;background:linear-gradient(180deg,#071027 0%,#081228 100%);color:#e6eef8}
-    .wrap{max-width:1200px;margin:32px auto;padding:20px}
-    h1{font-size:20px;margin:0 0 12px}
-    .grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-    .full-width{grid-column:1 / -1}
-    .card{background:var(--card);padding:16px;border-radius:12px;box-shadow:0 6px 24px rgba(2,6,23,0.6)}
-    .encrypt-card{border-left:3px solid var(--accent)}
-    .decrypt-card{border-left:3px solid var(--success)}
-    label{display:block;font-size:13px;color:var(--muted);margin-bottom:6px}
-    textarea,input,select{width:100%;box-sizing:border-box;border-radius:8px;padding:10px;border:1px solid rgba(255,255,255,0.04);background:linear-gradient(180deg,rgba(255,255,255,0.02),transparent);color:inherit}
-    textarea{min-height:100px;resize:vertical}
-    .row{display:flex;gap:8px}
-    button{border:none;color:#fff;padding:10px 16px;border-radius:8px;cursor:pointer;font-weight:500;transition:all 0.2s}
-    .btn-encrypt{background:var(--accent)}
-    .btn-decrypt{background:var(--success)}
-    .btn-clear{background:var(--warning)}
-    .btn-download{background:#6b7280}
-    button:hover{opacity:0.9;transform:translateY(-1px)}
-    pre{white-space:pre-wrap;word-wrap:break-word;background:var(--glass);padding:12px;border-radius:8px;color:var(--muted);font-family:'Courier New',monospace;border:1px solid rgba(255,255,255,0.05)}
-    .small{font-size:12px;color:var(--muted)}
-    .foot{margin-top:12px;font-size:13px;color:var(--muted)}
-    .section-title{font-size:16px;font-weight:600;margin:0 0 16px;color:#e6eef8;display:flex;align-items:center;gap:8px}
-    .result-section{margin-top:16px;padding-top:16px;border-top:1px solid rgba(255,255,255,0.1)}
-    .copy-btn{background:#374151;font-size:11px;padding:4px 8px;margin-left:8px}
-    @media(max-width:900px){.grid{grid-template-columns:1fr}}
+    @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap');
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Cairo', sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: #fff;
+      direction: rtl;
+      min-height: 100vh;
+      padding: 20px;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    /* خلفية متحركة */
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: 
+        radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.15) 0%, transparent 50%),
+        radial-gradient(circle at 40% 40%, rgba(120, 219, 255, 0.15) 0%, transparent 50%);
+      animation: float 20s ease-in-out infinite;
+      z-index: -1;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0px) rotate(0deg); }
+      50% { transform: translateY(-20px) rotate(5deg); }
+    }
+
+    .main-container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 40px;
+      font-size: 2.5rem;
+      font-weight: 700;
+      background: linear-gradient(45deg, #fff, #e0e7ff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      text-shadow: 0 4px 10px rgba(0,0,0,0.3);
+      user-select: none;
+    }
+
+    .tools-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+      gap: 30px;
+      align-items: start;
+    }
+
+    .container {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      padding: 30px;
+      border-radius: 20px;
+      box-shadow: 
+        0 8px 32px rgba(0, 0, 0, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .container:hover {
+      transform: translateY(-5px);
+      box-shadow: 
+        0 15px 40px rgba(0, 0, 0, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.3);
+    }
+
+    .container-title {
+      font-size: 1.4rem;
+      font-weight: 600;
+      margin-bottom: 25px;
+      text-align: center;
+      color: #fff;
+      padding-bottom: 15px;
+      border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+    }
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 600;
+      color: rgba(255, 255, 255, 0.9);
+      user-select: none;
+      font-size: 0.95rem;
+    }
+
+    textarea, input[type=text] {
+      width: 100%;
+      padding: 15px 18px;
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      color: #fff;
+      font-size: 16px;
+      font-family: 'Cairo', sans-serif;
+      resize: vertical;
+      outline: none;
+      transition: all 0.3s ease;
+      margin-bottom: 15px;
+    }
+
+    textarea:focus, input[type=text]:focus {
+      border-color: rgba(255, 255, 255, 0.5);
+      background: rgba(255, 255, 255, 0.15);
+      box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.1);
+      transform: translateY(-1px);
+    }
+
+    textarea::placeholder, input[type=text]::placeholder {
+      color: rgba(255, 255, 255, 0.6);
+    }
+
+    button {
+      width: 100%;
+      padding: 15px;
+      margin: 10px 0;
+      background: linear-gradient(45deg, #667eea, #764ba2);
+      color: #fff;
+      font-weight: 700;
+      font-size: 16px;
+      font-family: 'Cairo', sans-serif;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      user-select: none;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+      position: relative;
+      overflow: hidden;
+    }
+
+    button::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+      transition: left 0.5s;
+    }
+
+    button:hover::before {
+      left: 100%;
+    }
+
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+    }
+
+    button:active {
+      transform: translateY(0);
+    }
+
+    .result-container {
+      margin-top: 20px;
+      position: relative;
+    }
+
+    .result-box {
+      background: rgba(0, 0, 0, 0.2);
+      backdrop-filter: blur(10px);
+      min-height: 80px;
+      padding: 15px;
+      border-radius: 12px;
+      font-family: 'Courier New', monospace;
+      font-size: 14px;
+      color: #e0e7ff;
+      overflow-wrap: break-word;
+      user-select: text;
+      white-space: pre-wrap;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      margin-bottom: 10px;
+      line-height: 1.5;
+    }
+
+    .copy-btn {
+      width: auto;
+      padding: 8px 16px;
+      margin: 0;
+      background: linear-gradient(45deg, #10b981, #059669);
+      font-size: 14px;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
+      transition: all 0.2s ease;
+    }
+
+    .copy-btn:hover {
+      background: linear-gradient(45deg, #059669, #047857);
+      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
+    }
+
+    .copy-btn.copied {
+      background: linear-gradient(45deg, #7c3aed, #5b21b6);
+      transform: scale(0.95);
+    }
+
+    .result-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .success-message {
+      background: linear-gradient(45deg, #10b981, #059669);
+      color: white;
+      padding: 12px 20px;
+      border-radius: 8px;
+      margin: 10px 0;
+      font-size: 14px;
+      text-align: center;
+      opacity: 0;
+      transform: translateY(-10px);
+      transition: all 0.3s ease;
+    }
+
+    .success-message.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .icon {
+      display: inline-block;
+      margin-left: 8px;
+      font-size: 16px;
+    }
+
+    @media (max-width: 768px) {
+      .tools-container {
+        grid-template-columns: 1fr;
+        gap: 20px;
+      }
+      
+      .container {
+        padding: 20px;
+      }
+      
+      h1 {
+        font-size: 2rem;
+      }
+    }
+
+    .fade-in {
+      animation: fadeIn 0.6s ease-out;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .loading {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .loading::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+      animation: loading 1.5s infinite;
+    }
+
+    @keyframes loading {
+      0% { left: -100%; }
+      100% { left: 100%; }
+    }
   </style>
 </head>
 <body>
-  <div class="wrap">
-    <h1>تشفيري — أداة التشفير الشخصية (تعمل بالكامل محليًا)</h1>
-    <p class="small">الموقع يعمل في المتصفح فقط — لا تُرفع بيانات إلى أي خادم. يحول العربية لحروف لاتينية، ثم يحول كل حرف لرقم بحسب ترتيب الأبجدية المعكوس (a→26, b→25, ..., z→1) مع إضافة مفتاح الدوران.</p>
+  <div class="main-container">
+    <h1 class="fade-in">🔐 أداة التشفير وفك التشفير الشخصية</h1>
 
-    <div class="grid">
-      <!-- قسم التشفير -->
-      <div class="card encrypt-card">
-        <div class="section-title">🔒 تشفير النص</div>
+    <div class="tools-container">
+      <div class="container fade-in" id="encryptSection">
+        <h2 class="container-title">🔒 تشفير النص</h2>
         
-        <label>النص العربي المراد تشفيره:</label>
-        <textarea id="inputArabic" placeholder="اكتب النص العربي هنا...
-مثال: مرحبا بالعالم"></textarea>
+        <label for="inputTextEncrypt">النص الأصلي للتشفير:</label>
+        <textarea id="inputTextEncrypt" rows="4" placeholder="أدخل النص الذي تريد تشفيره هنا..."></textarea>
 
-        <div style="margin-top:12px" class="row">
-          <div style="flex:1">
-            <label>مفتاح التشفير:</label>
-            <input id="keyInput" type="number" value="42" />
-          </div>
-          <div style="width:150px">
-            <label>وضع التدوير:</label>
-            <select id="modToggle">
-              <option value="on">مفعّل (1-26)</option>
-              <option value="off">معطّل</option>
-            </select>
-          </div>
+        <label for="inputKeyEncrypt">المفتاح الرقمي (أرقام مفصولة بفاصلة أو فاصلة عليا '):</label>
+        <input type="text" id="inputKeyEncrypt" placeholder="مثال: 6'12'18 أو 6,12,18" value="6'12'18" />
+
+        <button onclick="encrypt()">
+          <span class="icon">🔐</span>
+          تشفير النص
+        </button>
+
+        <div class="success-message" id="encryptSuccess">
+          تم التشفير بنجاح! ✅
         </div>
 
-        <div style="margin-top:16px" class="row">
-          <button class="btn-encrypt" id="encryptBtn">🔒 تشفير</button>
-          <button class="btn-clear" id="clearEncryptBtn">🗑️ مسح</button>
-        </div>
-
-        <div class="result-section">
-          <label>النص باللاتينية (Transliteration):</label>
-          <pre id="latinOut">-</pre>
-
-          <label style="margin-top:12px">النص المشفر (الأرقام):
-            <button class="copy-btn" id="copyEncrypted">نسخ</button>
-          </label>
-          <pre id="numbersOut">-</pre>
+        <div class="result-container">
+          <label>النتيجة - النص المشفر:</label>
+          <div class="result-box" id="outputEncrypt"></div>
+          <div class="result-actions">
+            <button class="copy-btn" onclick="copyText('outputEncrypt', this)">
+              <span class="icon">📋</span>
+              نسخ النص المشفر
+            </button>
+          </div>
         </div>
       </div>
 
-      <!-- قسم فك التشفير -->
-      <div class="card decrypt-card">
-        <div class="section-title">🔓 فك التشفير</div>
+      <div class="container fade-in" id="decryptSection">
+        <h2 class="container-title">🔓 فك تشفير النص</h2>
         
-        <label>النص المشفر (الأرقام المفصولة بمسافات):</label>
-        <textarea id="encryptedInput" placeholder="ألصق النص المشفر هنا...
-مثال: 68' 69' 70' 71'"></textarea>
+        <label for="inputTextDecrypt">النص المشفر (أرقام مفصولة بـ ' ):</label>
+        <textarea id="inputTextDecrypt" rows="4" placeholder="أدخل النص المشفر هنا..."></textarea>
 
-        <div style="margin-top:12px" class="row">
-          <div style="flex:1">
-            <label>مفتاح فك التشفير:</label>
-            <input id="decryptKeyInput" type="number" value="42" />
-          </div>
-          <div style="width:150px">
-            <label>وضع التدوير:</label>
-            <select id="decryptModToggle">
-              <option value="on">مفعّل (1-26)</option>
-              <option value="off">معطّل</option>
-            </select>
-          </div>
+        <label for="inputKeyDecrypt">المفتاح الرقمي (أرقام مفصولة بفاصلة أو فاصلة عليا '):</label>
+        <input type="text" id="inputKeyDecrypt" placeholder="مثال: 6'12'18 أو 6,12,18" value="6'12'18" />
+
+        <button onclick="decrypt()">
+          <span class="icon">🔓</span>
+          فك التشفير
+        </button>
+
+        <div class="success-message" id="decryptSuccess">
+          تم فك التشفير بنجاح! ✅
         </div>
 
-        <div style="margin-top:16px" class="row">
-          <button class="btn-decrypt" id="decryptBtn">🔓 فك التشفير</button>
-          <button class="btn-clear" id="clearDecryptBtn">🗑️ مسح</button>
-        </div>
-
-        <div class="result-section">
-          <label>النص المفكوك (لاتيني):
-            <button class="copy-btn" id="copyDecrypted">نسخ</button>
-          </label>
-          <pre id="decryptedOut">-</pre>
-
-          <label style="margin-top:12px">محاولة تحويل للعربية (تقريبية):</label>
-          <pre id="arabicOut">-</pre>
+        <div class="result-container">
+          <label>النتيجة - النص المفكوك:</label>
+          <div class="result-box" id="outputDecrypt"></div>
+          <div class="result-actions">
+            <button class="copy-btn" onclick="copyText('outputDecrypt', this)">
+              <span class="icon">📋</span>
+              نسخ النص المفكوك
+            </button>
+          </div>
         </div>
       </div>
-    </div>
-
-    <!-- أزرار إضافية -->
-    <div class="card full-width" style="margin-top:16px">
-      <div style="display:flex;gap:12px;flex-wrap:wrap">
-        <button class="btn-download" id="downloadBtn">💾 تحميل HTML</button>
-        <button class="btn-clear" id="clearAllBtn">🗑️ مسح الكل</button>
-      </div>
-    </div>
-
-    <!-- شرح الآلية -->
-    <div style="margin-top:16px" class="card full-width">
-      <h3 style="margin-top:0">📋 شرح آلية التشفير</h3>
-      <ul class="small">
-        <li><strong>التشفير:</strong> تحويل العربية → لاتينية → أرقام معكوسة (a→26, z→1) → إضافة مفتاح الدوران</li>
-        <li><strong>فك التشفير:</strong> أرقام مشفرة → طرح مفتاح الدوران → تحويل لحروف لاتينية → محاولة إرجاع للعربية</li>
-        <li><strong>وضع التدوير:</strong> إذا كان مفعلاً، تبقى الأرقام بين 1-26، وإلا فقد تصبح أكبر</li>
-        <li><strong>ملاحظة:</strong> تحويل اللاتينية للعربية تقريبي وقد لا يعطي النص الأصلي بدقة</li>
-      </ul>
     </div>
   </div>
 
 <script>
-// جدول تحويل من العربية إلى اللاتينية
-const arToLat = {
-  'ا':'a','أ':'a','إ':'a','آ':'aa','ب':'b','ت':'t','ث':'th','ج':'j','ح':'h','خ':'kh',
-  'د':'d','ذ':'dh','ر':'r','ز':'z','س':'s','ش':'sh','ص':'s','ض':'d','ط':'t','ظ':'z',
-  'ع':'a','غ':'gh','ف':'f','ق':'q','ك':'k','ل':'l','م':'m','ن':'n','ه':'h','و':'w','ي':'y',
-  'ى':'a','ء':'','ئ':'','ؤ':'','ة':'h','ً':'','ٌ':'','ٍ':'','َ':'','ُ':'','ِ':'','ْ':'','ّ':''
-};
+  const reversedAlphabet = 'zyxwvutsrqponmlkjihgfedcba';
 
-// جدول عكسي لمحاولة تحويل من اللاتينية للعربية (تقريبي)
-const latToAr = {
-  'a':'ا','b':'ب','t':'ت','j':'ج','h':'ه','d':'د','r':'ر','z':'ز','s':'س',
-  'f':'ف','q':'ق','k':'ك','l':'ل','m':'م','n':'ن','w':'و','y':'ي',
-  'th':'ث','kh':'خ','dh':'ذ','sh':'ش','gh':'غ','aa':'آ'
-};
-
-function transliterateArabic(text) {
-  let out = '';
-  for (let ch of text) {
-    if (arToLat.hasOwnProperty(ch)) out += arToLat[ch];
-    else if (/\s/.test(ch)) out += ' ';
-    else out += ch;
+  function charToNum(c) {
+    return reversedAlphabet.indexOf(c.toLowerCase()) + 1;
   }
-  return out.replace(/\s+/g, ' ').trim();
-}
 
-function transliterateToArabic(text) {
-  let out = '';
-  let i = 0;
-  while (i < text.length) {
-    // محاولة للثنائيات أولاً
-    let twoChar = text.substr(i, 2).toLowerCase();
-    if (latToAr[twoChar]) {
-      out += latToAr[twoChar];
-      i += 2;
-    } else {
-      let oneChar = text[i].toLowerCase();
-      if (latToAr[oneChar]) {
-        out += latToAr[oneChar];
-      } else if (/\s/.test(text[i])) {
-        out += ' ';
-      } else {
-        out += text[i];
+  function numToChar(n) {
+    n = ((n - 1) % 26) + 1;
+    return reversedAlphabet.charAt(n - 1);
+  }
+
+  function parseKey(keyStr) {
+    let cleanStr = keyStr.replace(/'/g, ',').replace(/\s+/g, '');
+    let parts = cleanStr.split(',');
+    let nums = [];
+    for(let p of parts){
+      let num = parseInt(p);
+      if(!isNaN(num)){
+        nums.push(((num - 1) % 26) + 1);
       }
-      i += 1;
     }
+    return nums;
   }
-  return out.replace(/\s+/g, ' ').trim();
-}
 
-function reversedAlphaIndex(letter) {
-  const a = letter.toLowerCase();
-  if (a < 'a' || a > 'z') return null;
-  const idx = a.charCodeAt(0) - 'a'.charCodeAt(0) + 1;
-  return 27 - idx;
-}
-
-function indexToReversedAlpha(index) {
-  const originalIdx = 27 - index;
-  if (originalIdx < 1 || originalIdx > 26) return null;
-  return String.fromCharCode('a'.charCodeAt(0) + originalIdx - 1);
-}
-
-function encryptText(arabicText, key, useModulo = true) {
-  const latin = transliterateArabic(arabicText);
-  const parts = [];
-  
-  for (let ch of latin) {
-    if (/\s/.test(ch)) {
-      parts.push('\n');
-      continue;
-    }
-    
-    const num = reversedAlphaIndex(ch);
-    if (num === null) {
-      parts.push(ch);
-    } else {
-      let v = num + Number(key);
-      if (useModulo) {
-        v = ((v - 1) % 26) + 1;
+  function textToEnglish(text) {
+    const arabicToEnglish = {
+      'ا':'a','ب':'b','ت':'t','ث':'th','ج':'j','ح':'h','خ':'kh','د':'d','ذ':'dh','ر':'r','ز':'z','س':'s','ش':'sh','ص':'s','ض':'d','ط':'t','ظ':'z','ع':'a','غ':'gh','ف':'f','ق':'q','ك':'k','ل':'l','م':'m','ن':'n','ه':'h','و':'w','ي':'y','ء':'\'', 'ى':'a', 'ة':'h'
+    };
+    let result = '';
+    for(let ch of text.toLowerCase()){
+      if(/[a-z]/.test(ch)){
+        result += ch;
+      } else if (arabicToEnglish[ch]){
+        let val = arabicToEnglish[ch];
+        result += val.charAt(0);
       }
-      parts.push(String(v));
+    }
+    return result;
+  }
+
+  function showSuccessMessage(elementId) {
+    const element = document.getElementById(elementId);
+    element.classList.add('show');
+    setTimeout(() => {
+      element.classList.remove('show');
+    }, 3000);
+  }
+
+  function addLoadingEffect(buttonElement) {
+    buttonElement.classList.add('loading');
+    setTimeout(() => {
+      buttonElement.classList.remove('loading');
+    }, 500);
+  }
+
+  async function copyText(elementId, buttonElement) {
+    const text = document.getElementById(elementId).textContent;
+    
+    if (!text.trim()) {
+      alert('لا يوجد نص لنسخه');
+      return;
+    }
+
+    try {
+      await navigator.clipboard.writeText(text);
+      
+      // تأثير بصري للزر
+      const originalText = buttonElement.innerHTML;
+      buttonElement.innerHTML = '<span class="icon">✅</span> تم النسخ';
+      buttonElement.classList.add('copied');
+      
+      setTimeout(() => {
+        buttonElement.innerHTML = originalText;
+        buttonElement.classList.remove('copied');
+      }, 2000);
+      
+    } catch (err) {
+      // طريقة بديلة للمتصفحات القديمة
+      const textArea = document.createElement('textarea');
+      textArea.value = text;
+      document.body.appendChild(textArea);
+      textArea.select();
+      document.execCommand('copy');
+      document.body.removeChild(textArea);
+      
+      alert('تم نسخ النص!');
     }
   }
-  
-  return { latin: latin, numbers: parts };
-}
 
-function decryptNumbers(numbersText, key, useModulo = true) {
-  // تنظيف النص وتحويله لمصفوفة أرقام
-  const cleanText = numbersText.replace(/'/g, '').replace(/\n/g, ' \n ');
-  const parts = cleanText.split(/\s+/).filter(s => s.length > 0);
-  
-  const chars = [];
-  for (const p of parts) {
-    if (p === '\n') {
-      chars.push(' ');
-      continue;
-    }
+  function encrypt(){
+    const button = event.target;
+    addLoadingEffect(button);
     
-    const n = Number(p);
-    if (!Number.isFinite(n) || p.trim() === '') {
-      chars.push(p);
-      continue;
+    let input = document.getElementById('inputTextEncrypt').value.trim();
+    let keyStr = document.getElementById('inputKeyEncrypt').value.trim();
+
+    if(!input || !keyStr){
+      alert('يرجى إدخال النص والمفتاح');
+      return;
     }
-    
-    let v = n - Number(key);
-    if (useModulo) {
-      v = ((v - 1) % 26) + 1;
-      if (v <= 0) v += 26;
+
+    let key = parseKey(keyStr);
+    if(key.length === 0){
+      alert('المفتاح غير صالح');
+      return;
     }
-    
-    const ch = indexToReversedAlpha(v);
-    if (ch) {
-      chars.push(ch);
-    } else {
-      chars.push('?');
+
+    let engText = textToEnglish(input);
+    if(engText.length === 0){
+      alert('النص لا يحتوي على حروف إنجليزية أو عربية صالحة');
+      return;
     }
+
+    let outputNums = [];
+    for(let i=0; i<engText.length; i++){
+      let c = engText.charAt(i);
+      let cNum = charToNum(c);
+      let kNum = key[i % key.length];
+      let encryptedNum = ((cNum + kNum - 1) % 26) + 1;
+      outputNums.push(encryptedNum + "'");
+    }
+
+    document.getElementById('outputEncrypt').textContent = outputNums.join(' ');
+    showSuccessMessage('encryptSuccess');
   }
-  
-  return chars.join('').replace(/\s+/g, ' ').trim();
-}
 
-// إعداد المتغيرات
-const elements = {
-  // التشفير
-  inputArabic: document.getElementById('inputArabic'),
-  keyInput: document.getElementById('keyInput'),
-  modToggle: document.getElementById('modToggle'),
-  encryptBtn: document.getElementById('encryptBtn'),
-  clearEncryptBtn: document.getElementById('clearEncryptBtn'),
-  latinOut: document.getElementById('latinOut'),
-  numbersOut: document.getElementById('numbersOut'),
-  
-  // فك التشفير
-  encryptedInput: document.getElementById('encryptedInput'),
-  decryptKeyInput: document.getElementById('decryptKeyInput'),
-  decryptModToggle: document.getElementById('decryptModToggle'),
-  decryptBtn: document.getElementById('decryptBtn'),
-  clearDecryptBtn: document.getElementById('clearDecryptBtn'),
-  decryptedOut: document.getElementById('decryptedOut'),
-  arabicOut: document.getElementById('arabicOut'),
-  
-  // أزرار إضافية
-  downloadBtn: document.getElementById('downloadBtn'),
-  clearAllBtn: document.getElementById('clearAllBtn'),
-  copyEncrypted: document.getElementById('copyEncrypted'),
-  copyDecrypted: document.getElementById('copyDecrypted')
-};
+  function decrypt(){
+    const button = event.target;
+    addLoadingEffect(button);
+    
+    let input = document.getElementById('inputTextDecrypt').value.trim();
+    let keyStr = document.getElementById('inputKeyDecrypt').value.trim();
 
-// وظائف الأحداث
-elements.encryptBtn.addEventListener('click', () => {
-  const key = Number(elements.keyInput.value) || 0;
-  const useModulo = elements.modToggle.value === 'on';
-  const result = encryptText(elements.inputArabic.value || '', key, useModulo);
-  
-  elements.latinOut.textContent = result.latin || '-';
-  const numStr = result.numbers.map(x => 
-    (x === '\n' ? "\n" : (typeof x === 'string' && /\D/.test(x) ? x : x + "'"))
-  ).join(' ');
-  elements.numbersOut.textContent = numStr || '-';
-});
+    if(!input || !keyStr){
+      alert('يرجى إدخال النص المشفر والمفتاح');
+      return;
+    }
 
-elements.decryptBtn.addEventListener('click', () => {
-  const key = Number(elements.decryptKeyInput.value) || 0;
-  const useModulo = elements.decryptModToggle.value === 'on';
-  const encryptedText = elements.encryptedInput.value;
-  
-  if (!encryptedText.trim()) {
-    alert('يرجى إدخال النص المشفر أولاً');
-    return;
+    let key = parseKey(keyStr);
+    if(key.length === 0){
+      alert('المفتاح غير صالح');
+      return;
+    }
+
+    let parts = input.split("'").filter(p => p.trim() !== '');
+    let nums = [];
+    for(let p of parts){
+      let n = parseInt(p.trim());
+      if(!isNaN(n)){
+        nums.push(((n - 1) % 26) + 1);
+      }
+    }
+    if(nums.length === 0){
+      alert('النص المشفر غير صالح');
+      return;
+    }
+
+    let outputChars = [];
+    for(let i=0; i<nums.length; i++){
+      let n = nums[i];
+      let kNum = key[i % key.length];
+      let decryptedNum = n - kNum;
+      if(decryptedNum <= 0) decryptedNum += 26;
+      outputChars.push(numToChar(decryptedNum));
+    }
+
+    document.getElementById('outputDecrypt').textContent = outputChars.join('');
+    showSuccessMessage('decryptSuccess');
   }
-  
-  const decrypted = decryptNumbers(encryptedText, key, useModulo);
-  elements.decryptedOut.textContent = decrypted || '-';
-  
-  // محاولة تحويل للعربية
-  const arabic = transliterateToArabic(decrypted);
-  elements.arabicOut.textContent = arabic || '-';
-});
 
-elements.clearEncryptBtn.addEventListener('click', () => {
-  elements.inputArabic.value = '';
-  elements.latinOut.textContent = '-';
-  elements.numbersOut.textContent = '-';
-});
-
-elements.clearDecryptBtn.addEventListener('click', () => {
-  elements.encryptedInput.value = '';
-  elements.decryptedOut.textContent = '-';
-  elements.arabicOut.textContent = '-';
-});
-
-elements.clearAllBtn.addEventListener('click', () => {
-  elements.inputArabic.value = '';
-  elements.encryptedInput.value = '';
-  elements.latinOut.textContent = '-';
-  elements.numbersOut.textContent = '-';
-  elements.decryptedOut.textContent = '-';
-  elements.arabicOut.textContent = '-';
-});
-
-elements.copyEncrypted.addEventListener('click', () => {
-  const text = elements.numbersOut.textContent;
-  if (text && text !== '-') {
-    navigator.clipboard.writeText(text).then(() => {
-      elements.copyEncrypted.textContent = '✓ تم النسخ';
-      setTimeout(() => elements.copyEncrypted.textContent = 'نسخ', 2000);
+  // تأثيرات تحميل الصفحة
+  window.addEventListener('load', () => {
+    const elements = document.querySelectorAll('.fade-in');
+    elements.forEach((el, index) => {
+      el.style.animationDelay = `${index * 0.1}s`;
     });
-  }
-});
-
-elements.copyDecrypted.addEventListener('click', () => {
-  const text = elements.decryptedOut.textContent;
-  if (text && text !== '-') {
-    navigator.clipboard.writeText(text).then(() => {
-      elements.copyDecrypted.textContent = '✓ تم النسخ';
-      setTimeout(() => elements.copyDecrypted.textContent = 'نسخ', 2000);
-    });
-  }
-});
-
-elements.downloadBtn.addEventListener('click', () => {
-  const content = document.documentElement.outerHTML;
-  const blob = new Blob([content], { type: 'text/html;charset=utf-8' });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = 'tashfiri.html';
-  a.click();
-  URL.revokeObjectURL(url);
-});
-
-// مزامنة مفاتيح التشفير
-elements.keyInput.addEventListener('input', () => {
-  elements.decryptKeyInput.value = elements.keyInput.value;
-});
-
-elements.decryptKeyInput.addEventListener('input', () => {
-  elements.keyInput.value = elements.decryptKeyInput.value;
-});
-
-elements.modToggle.addEventListener('change', () => {
-  elements.decryptModToggle.value = elements.modToggle.value;
-});
-
-elements.decryptModToggle.addEventListener('change', () => {
-  elements.modToggle.value = elements.decryptModToggle.value;
-});
+  });
 </script>
+
 </body>
 </html>
