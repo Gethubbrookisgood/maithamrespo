@@ -5,84 +5,139 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>تشفيري — أداة التشفير الشخصية</title>
   <style>
-    :root{--bg:#0f1724;--card:#0b1220;--muted:#9aa6bf;--accent:#60a5fa;--glass:rgba(255,255,255,0.03)}
+    :root{--bg:#0f1724;--card:#0b1220;--muted:#9aa6bf;--accent:#60a5fa;--glass:rgba(255,255,255,0.03);--success:#10b981;--warning:#f59e0b}
     html,body{height:100%;margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,'Noto Naskh Arabic',sans-serif;background:linear-gradient(180deg,#071027 0%,#081228 100%);color:#e6eef8}
-    .wrap{max-width:980px;margin:32px auto;padding:20px}
+    .wrap{max-width:1200px;margin:32px auto;padding:20px}
     h1{font-size:20px;margin:0 0 12px}
     .grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-    .card{background:var(--card);padding:14px;border-radius:12px;box-shadow:0 6px 24px rgba(2,6,23,0.6)}
+    .full-width{grid-column:1 / -1}
+    .card{background:var(--card);padding:16px;border-radius:12px;box-shadow:0 6px 24px rgba(2,6,23,0.6)}
+    .encrypt-card{border-left:3px solid var(--accent)}
+    .decrypt-card{border-left:3px solid var(--success)}
     label{display:block;font-size:13px;color:var(--muted);margin-bottom:6px}
     textarea,input,select{width:100%;box-sizing:border-box;border-radius:8px;padding:10px;border:1px solid rgba(255,255,255,0.04);background:linear-gradient(180deg,rgba(255,255,255,0.02),transparent);color:inherit}
     textarea{min-height:100px;resize:vertical}
     .row{display:flex;gap:8px}
-    button{background:var(--accent);border:none;color:#021028;padding:8px 12px;border-radius:8px;cursor:pointer}
-    pre{white-space:pre-wrap;word-wrap:break-word;background:var(--glass);padding:10px;border-radius:8px;color:var(--muted);font-family:inherit}
+    button{border:none;color:#fff;padding:10px 16px;border-radius:8px;cursor:pointer;font-weight:500;transition:all 0.2s}
+    .btn-encrypt{background:var(--accent)}
+    .btn-decrypt{background:var(--success)}
+    .btn-clear{background:var(--warning)}
+    .btn-download{background:#6b7280}
+    button:hover{opacity:0.9;transform:translateY(-1px)}
+    pre{white-space:pre-wrap;word-wrap:break-word;background:var(--glass);padding:12px;border-radius:8px;color:var(--muted);font-family:'Courier New',monospace;border:1px solid rgba(255,255,255,0.05)}
     .small{font-size:12px;color:var(--muted)}
     .foot{margin-top:12px;font-size:13px;color:var(--muted)}
-    @media(max-width:880px){.grid{grid-template-columns:1fr}}
+    .section-title{font-size:16px;font-weight:600;margin:0 0 16px;color:#e6eef8;display:flex;align-items:center;gap:8px}
+    .result-section{margin-top:16px;padding-top:16px;border-top:1px solid rgba(255,255,255,0.1)}
+    .copy-btn{background:#374151;font-size:11px;padding:4px 8px;margin-left:8px}
+    @media(max-width:900px){.grid{grid-template-columns:1fr}}
   </style>
 </head>
 <body>
   <div class="wrap">
     <h1>تشفيري — أداة التشفير الشخصية (تعمل بالكامل محليًا)</h1>
-    <p class="small">الموقع يعمل في المتصفح فقط — لا تُرفع بيانات إلى أي خادم. افتراضيًا: يتم تحويل العربية لكتابة إنجليزية (transliteration) ثم تُحول الحروف الإنجليزية إلى أرقام بحسب ترتيب الأبجدية بالعكس ثم يُطبق مفتاح الدوران.</p>
+    <p class="small">الموقع يعمل في المتصفح فقط — لا تُرفع بيانات إلى أي خادم. يحول العربية لحروف لاتينية، ثم يحول كل حرف لرقم بحسب ترتيب الأبجدية المعكوس (a→26, b→25, ..., z→1) مع إضافة مفتاح الدوران.</p>
 
     <div class="grid">
-      <div class="card">
-        <label>نص بالعربية (أو نسخ من مفكرة):</label>
-        <textarea id="inputArabic" placeholder="اكتب هنا...
-مثال: كتاب"></textarea>
+      <!-- قسم التشفير -->
+      <div class="card encrypt-card">
+        <div class="section-title">🔒 تشفير النص</div>
+        
+        <label>النص العربي المراد تشفيره:</label>
+        <textarea id="inputArabic" placeholder="اكتب النص العربي هنا...
+مثال: مرحبا بالعالم"></textarea>
 
-        <div style="margin-top:8px" class="row">
+        <div style="margin-top:12px" class="row">
           <div style="flex:1">
-            <label>مفتاح الدوران (افتراضي 42):</label>
+            <label>مفتاح التشفير:</label>
             <input id="keyInput" type="number" value="42" />
           </div>
-          <div style="width:140px">
-            <label>وضع التدوير (Modulo):</label>
+          <div style="width:150px">
+            <label>وضع التدوير:</label>
             <select id="modToggle">
-              <option value="on">شغّل (يبقي الأرقام ضمن 1..26)</option>
-              <option value="off">أوقف (الأرقام قد تصبح كبيرة)</option>
+              <option value="on">مفعّل (1-26)</option>
+              <option value="off">معطّل</option>
             </select>
           </div>
         </div>
 
-        <div style="margin-top:10px" class="row">
-          <button id="encryptBtn">تشفير</button>
-          <button id="decryptBtn">فك التشفير</button>
-          <button id="clearBtn">مسح</button>
-          <button id="downloadBtn">تحميل HTML</button>
+        <div style="margin-top:16px" class="row">
+          <button class="btn-encrypt" id="encryptBtn">🔒 تشفير</button>
+          <button class="btn-clear" id="clearEncryptBtn">🗑️ مسح</button>
         </div>
 
-        <p class="foot">خيارات متقدمة: يمكنك تعديل جدول الـ transliteration داخل الشيفرة إن رغبت، أو استخدام زر "فك التشفير" لإرجاع النص الأصلي إن كنت تعرف المفتاح ووضع التدوير.</p>
+        <div class="result-section">
+          <label>النص باللاتينية (Transliteration):</label>
+          <pre id="latinOut">-</pre>
+
+          <label style="margin-top:12px">النص المشفر (الأرقام):
+            <button class="copy-btn" id="copyEncrypted">نسخ</button>
+          </label>
+          <pre id="numbersOut">-</pre>
+        </div>
       </div>
 
-      <div class="card">
-        <label>النتيجة — الكتابة الإنجليزية (transliteration):</label>
-        <pre id="latinOut">-</pre>
+      <!-- قسم فك التشفير -->
+      <div class="card decrypt-card">
+        <div class="section-title">🔓 فك التشفير</div>
+        
+        <label>النص المشفر (الأرقام المفصولة بمسافات):</label>
+        <textarea id="encryptedInput" placeholder="ألصق النص المشفر هنا...
+مثال: 68' 69' 70' 71'"></textarea>
 
-        <label style="margin-top:8px">النتيجة — أرقام بعد تطبيق ترتيب الأبجدية بالعكس ثم مفتاح الدوران:</label>
-        <pre id="numbersOut">-</pre>
+        <div style="margin-top:12px" class="row">
+          <div style="flex:1">
+            <label>مفتاح فك التشفير:</label>
+            <input id="decryptKeyInput" type="number" value="42" />
+          </div>
+          <div style="width:150px">
+            <label>وضع التدوير:</label>
+            <select id="decryptModToggle">
+              <option value="on">مفعّل (1-26)</option>
+              <option value="off">معطّل</option>
+            </select>
+          </div>
+        </div>
 
-        <label style="margin-top:8px">فك الشفرة (نص مفكوك):</label>
-        <pre id="decodedOut">-</pre>
+        <div style="margin-top:16px" class="row">
+          <button class="btn-decrypt" id="decryptBtn">🔓 فك التشفير</button>
+          <button class="btn-clear" id="clearDecryptBtn">🗑️ مسح</button>
+        </div>
+
+        <div class="result-section">
+          <label>النص المفكوك (لاتيني):
+            <button class="copy-btn" id="copyDecrypted">نسخ</button>
+          </label>
+          <pre id="decryptedOut">-</pre>
+
+          <label style="margin-top:12px">محاولة تحويل للعربية (تقريبية):</label>
+          <pre id="arabicOut">-</pre>
+        </div>
       </div>
     </div>
 
-    <div style="margin-top:16px" class="card">
-      <h3 style="margin-top:0">شرح سريع للآلية التي يعتمدها الموقع</h3>
+    <!-- أزرار إضافية -->
+    <div class="card full-width" style="margin-top:16px">
+      <div style="display:flex;gap:12px;flex-wrap:wrap">
+        <button class="btn-download" id="downloadBtn">💾 تحميل HTML</button>
+        <button class="btn-clear" id="clearAllBtn">🗑️ مسح الكل</button>
+      </div>
+    </div>
+
+    <!-- شرح الآلية -->
+    <div style="margin-top:16px" class="card full-width">
+      <h3 style="margin-top:0">📋 شرح آلية التشفير</h3>
       <ul class="small">
-        <li>1) تحويل الحروف العربية لحروف إنجليزية تقريبية (مثال: "ك" → "k", "ت" → "t").</li>
-        <li>2) لكل حرف لاتيني نأخذ موقعه في الأبجدية الإنجليزية (a..z -> 1..26) <strong>لكن بالعكس</strong> (a→26, b→25, c→24, ... , z→1).</li>
-        <li>3) نضيف مفتاح الدوران (موجب) لكل قيمة. إن كان وضع التدوير مفعلًا، نطبّق modulo 26 بحيث تبقى النتائج بين 1 و26، وإذا كان مُطفأ فالأرقام ليست مقيدة.</li>
-        <li>4) العرض النهائي بالأرقام مفصولة بعلامة "'" كما رغبت.</li>
+        <li><strong>التشفير:</strong> تحويل العربية → لاتينية → أرقام معكوسة (a→26, z→1) → إضافة مفتاح الدوران</li>
+        <li><strong>فك التشفير:</strong> أرقام مشفرة → طرح مفتاح الدوران → تحويل لحروف لاتينية → محاولة إرجاع للعربية</li>
+        <li><strong>وضع التدوير:</strong> إذا كان مفعلاً، تبقى الأرقام بين 1-26، وإلا فقد تصبح أكبر</li>
+        <li><strong>ملاحظة:</strong> تحويل اللاتينية للعربية تقريبي وقد لا يعطي النص الأصلي بدقة</li>
       </ul>
     </div>
   </div>
 
 <script>
-// --- جدول تبسيطي للتحويل من العربية إلى كتابة "إنجليزية" (transliteration)
-// يمكنك تعديله أو توسيعه حسب احتياجك
+// جدول تحويل من العربية إلى اللاتينية
 const arToLat = {
   'ا':'a','أ':'a','إ':'a','آ':'aa','ب':'b','ت':'t','ث':'th','ج':'j','ح':'h','خ':'kh',
   'د':'d','ذ':'dh','ر':'r','ز':'z','س':'s','ش':'sh','ص':'s','ض':'d','ط':'t','ظ':'z',
@@ -90,119 +145,245 @@ const arToLat = {
   'ى':'a','ء':'','ئ':'','ؤ':'','ة':'h','ً':'','ٌ':'','ٍ':'','َ':'','ُ':'','ِ':'','ْ':'','ّ':''
 };
 
-function transliterateArabic(text){
-  let out='';
-  for(let ch of text){
-    if(arToLat.hasOwnProperty(ch)) out += arToLat[ch];
-    else if(/\s/.test(ch)) out += ' ';
-    else out += ch; // إن كان حرف لاتيني أو رقم، نحتفظ به
+// جدول عكسي لمحاولة تحويل من اللاتينية للعربية (تقريبي)
+const latToAr = {
+  'a':'ا','b':'ب','t':'ت','j':'ج','h':'ه','d':'د','r':'ر','z':'ز','s':'س',
+  'f':'ف','q':'ق','k':'ك','l':'ل','m':'م','n':'ن','w':'و','y':'ي',
+  'th':'ث','kh':'خ','dh':'ذ','sh':'ش','gh':'غ','aa':'آ'
+};
+
+function transliterateArabic(text) {
+  let out = '';
+  for (let ch of text) {
+    if (arToLat.hasOwnProperty(ch)) out += arToLat[ch];
+    else if (/\s/.test(ch)) out += ' ';
+    else out += ch;
   }
-  // نظف المسافات المكررة
-  return out.replace(/\s+/g,' ').trim();
+  return out.replace(/\s+/g, ' ').trim();
 }
 
-// دالة لتحويل حرف لاتيني مفرد إلى ترتيبه بالعكس: a->26, b->25, ..., z->1
-function reversedAlphaIndex(letter){
+function transliterateToArabic(text) {
+  let out = '';
+  let i = 0;
+  while (i < text.length) {
+    // محاولة للثنائيات أولاً
+    let twoChar = text.substr(i, 2).toLowerCase();
+    if (latToAr[twoChar]) {
+      out += latToAr[twoChar];
+      i += 2;
+    } else {
+      let oneChar = text[i].toLowerCase();
+      if (latToAr[oneChar]) {
+        out += latToAr[oneChar];
+      } else if (/\s/.test(text[i])) {
+        out += ' ';
+      } else {
+        out += text[i];
+      }
+      i += 1;
+    }
+  }
+  return out.replace(/\s+/g, ' ').trim();
+}
+
+function reversedAlphaIndex(letter) {
   const a = letter.toLowerCase();
-  if(a < 'a' || a > 'z') return null;
-  const idx = a.charCodeAt(0) - 'a'.charCodeAt(0) + 1; // 1..26
-  return 27 - idx; // بالعكس: 26..1
+  if (a < 'a' || a > 'z') return null;
+  const idx = a.charCodeAt(0) - 'a'.charCodeAt(0) + 1;
+  return 27 - idx;
 }
 
-function encryptText(arabicText, key, useModulo=true){
+function indexToReversedAlpha(index) {
+  const originalIdx = 27 - index;
+  if (originalIdx < 1 || originalIdx > 26) return null;
+  return String.fromCharCode('a'.charCodeAt(0) + originalIdx - 1);
+}
+
+function encryptText(arabicText, key, useModulo = true) {
   const latin = transliterateArabic(arabicText);
   const parts = [];
-  for(let i=0;i<latin.length;i++){
-    const ch = latin[i];
-    if(/\s/.test(ch)) { parts.push('\n'); continue; }
-    // لدعم digraphs مثل 'sh','kh','th'، نجرب التقاط ثنائي
-    let two = latin.substr(i,2).toLowerCase();
-    let handleTwo = false;
-    let num = null;
-    if(['sh','kh','th','dh','gh'].includes(two)){
-      // خريطة مبسطة لبعض الثنائيات (تعطي قيمة للحرف الأول فقط هنا)
-      // بدلاً من تعقيد، سنفكك الثنائي إلى حروف مفردة في التشفير الحالي.
-      handleTwo = false;
+  
+  for (let ch of latin) {
+    if (/\s/.test(ch)) {
+      parts.push('\n');
+      continue;
     }
-    num = reversedAlphaIndex(ch);
-    if(num===null){
-      // إن كان رقمًا أو حرفًا غير لاتيني، احتفظ به كرمز
+    
+    const num = reversedAlphaIndex(ch);
+    if (num === null) {
       parts.push(ch);
     } else {
       let v = num + Number(key);
-      if(useModulo){
+      if (useModulo) {
         v = ((v - 1) % 26) + 1;
       }
       parts.push(String(v));
     }
   }
-  return {latin: latin, numbers: parts};
+  
+  return { latin: latin, numbers: parts };
 }
 
-function decryptNumbers(numberParts, key, useModulo=true){
+function decryptNumbers(numbersText, key, useModulo = true) {
+  // تنظيف النص وتحويله لمصفوفة أرقام
+  const cleanText = numbersText.replace(/'/g, '').replace(/\n/g, ' \n ');
+  const parts = cleanText.split(/\s+/).filter(s => s.length > 0);
+  
   const chars = [];
-  for(const p of numberParts){
-    if(p==='\n'){ chars.push('\n'); continue; }
-    const n = Number(p);
-    if(!Number.isFinite(n) || p.trim()==='') { chars.push(p); continue; }
-    let v = n - Number(key);
-    if(useModulo){
-      v = ((v - 1) % 26) + 1;
-      if(v<=0) v += 26;
+  for (const p of parts) {
+    if (p === '\n') {
+      chars.push(' ');
+      continue;
     }
-    const originalIdx = 27 - v; // 1..26
-    const ch = String.fromCharCode('a'.charCodeAt(0) + originalIdx - 1);
-    chars.push(ch);
+    
+    const n = Number(p);
+    if (!Number.isFinite(n) || p.trim() === '') {
+      chars.push(p);
+      continue;
+    }
+    
+    let v = n - Number(key);
+    if (useModulo) {
+      v = ((v - 1) % 26) + 1;
+      if (v <= 0) v += 26;
+    }
+    
+    const ch = indexToReversedAlpha(v);
+    if (ch) {
+      chars.push(ch);
+    } else {
+      chars.push('?');
+    }
   }
-  return chars.join('');
+  
+  return chars.join('').replace(/\s+/g, ' ').trim();
 }
 
-// تهيئة الأزرار
-const inputArabic = document.getElementById('inputArabic');
-const encryptBtn = document.getElementById('encryptBtn');
-const decryptBtn = document.getElementById('decryptBtn');
-const clearBtn = document.getElementById('clearBtn');
-const downloadBtn = document.getElementById('downloadBtn');
-const latinOut = document.getElementById('latinOut');
-const numbersOut = document.getElementById('numbersOut');
-const decodedOut = document.getElementById('decodedOut');
-const keyInput = document.getElementById('keyInput');
-const modToggle = document.getElementById('modToggle');
+// إعداد المتغيرات
+const elements = {
+  // التشفير
+  inputArabic: document.getElementById('inputArabic'),
+  keyInput: document.getElementById('keyInput'),
+  modToggle: document.getElementById('modToggle'),
+  encryptBtn: document.getElementById('encryptBtn'),
+  clearEncryptBtn: document.getElementById('clearEncryptBtn'),
+  latinOut: document.getElementById('latinOut'),
+  numbersOut: document.getElementById('numbersOut'),
+  
+  // فك التشفير
+  encryptedInput: document.getElementById('encryptedInput'),
+  decryptKeyInput: document.getElementById('decryptKeyInput'),
+  decryptModToggle: document.getElementById('decryptModToggle'),
+  decryptBtn: document.getElementById('decryptBtn'),
+  clearDecryptBtn: document.getElementById('clearDecryptBtn'),
+  decryptedOut: document.getElementById('decryptedOut'),
+  arabicOut: document.getElementById('arabicOut'),
+  
+  // أزرار إضافية
+  downloadBtn: document.getElementById('downloadBtn'),
+  clearAllBtn: document.getElementById('clearAllBtn'),
+  copyEncrypted: document.getElementById('copyEncrypted'),
+  copyDecrypted: document.getElementById('copyDecrypted')
+};
 
-encryptBtn.addEventListener('click', ()=>{
-  const key = Number(keyInput.value) || 0;
-  const useModulo = modToggle.value === 'on';
-  const res = encryptText(inputArabic.value || '', key, useModulo);
-  latinOut.textContent = res.latin || '-';
-  const numStr = res.numbers.map(x=> (x==='\n'?"\n": (typeof x==='string' && /\D/.test(x)? x : x + "'"))).join(' ');
-  numbersOut.textContent = numStr || '-';
-  decodedOut.textContent = '-';
+// وظائف الأحداث
+elements.encryptBtn.addEventListener('click', () => {
+  const key = Number(elements.keyInput.value) || 0;
+  const useModulo = elements.modToggle.value === 'on';
+  const result = encryptText(elements.inputArabic.value || '', key, useModulo);
+  
+  elements.latinOut.textContent = result.latin || '-';
+  const numStr = result.numbers.map(x => 
+    (x === '\n' ? "\n" : (typeof x === 'string' && /\D/.test(x) ? x : x + "'"))
+  ).join(' ');
+  elements.numbersOut.textContent = numStr || '-';
 });
 
-decryptBtn.addEventListener('click', ()=>{
-  const key = Number(keyInput.value) || 0;
-  const useModulo = modToggle.value === 'on';
-  const numsText = numbersOut.textContent;
-  const raw = numsText.replace(/'/g,' ').replace(/\n/g,' \n ');
-  const parts = raw.split(/\s+/).filter(s=>s.length>0);
-  const plainLatin = decryptNumbers(parts, key, useModulo);
-  decodedOut.textContent = plainLatin;
-  latinOut.textContent = transliterateArabic(inputArabic.value || '');
+elements.decryptBtn.addEventListener('click', () => {
+  const key = Number(elements.decryptKeyInput.value) || 0;
+  const useModulo = elements.decryptModToggle.value === 'on';
+  const encryptedText = elements.encryptedInput.value;
+  
+  if (!encryptedText.trim()) {
+    alert('يرجى إدخال النص المشفر أولاً');
+    return;
+  }
+  
+  const decrypted = decryptNumbers(encryptedText, key, useModulo);
+  elements.decryptedOut.textContent = decrypted || '-';
+  
+  // محاولة تحويل للعربية
+  const arabic = transliterateToArabic(decrypted);
+  elements.arabicOut.textContent = arabic || '-';
 });
 
-clearBtn.addEventListener('click', ()=>{
-  inputArabic.value='';latinOut.textContent='-';numbersOut.textContent='-';decodedOut.textContent='-';
+elements.clearEncryptBtn.addEventListener('click', () => {
+  elements.inputArabic.value = '';
+  elements.latinOut.textContent = '-';
+  elements.numbersOut.textContent = '-';
 });
 
-downloadBtn.addEventListener('click', ()=>{
+elements.clearDecryptBtn.addEventListener('click', () => {
+  elements.encryptedInput.value = '';
+  elements.decryptedOut.textContent = '-';
+  elements.arabicOut.textContent = '-';
+});
+
+elements.clearAllBtn.addEventListener('click', () => {
+  elements.inputArabic.value = '';
+  elements.encryptedInput.value = '';
+  elements.latinOut.textContent = '-';
+  elements.numbersOut.textContent = '-';
+  elements.decryptedOut.textContent = '-';
+  elements.arabicOut.textContent = '-';
+});
+
+elements.copyEncrypted.addEventListener('click', () => {
+  const text = elements.numbersOut.textContent;
+  if (text && text !== '-') {
+    navigator.clipboard.writeText(text).then(() => {
+      elements.copyEncrypted.textContent = '✓ تم النسخ';
+      setTimeout(() => elements.copyEncrypted.textContent = 'نسخ', 2000);
+    });
+  }
+});
+
+elements.copyDecrypted.addEventListener('click', () => {
+  const text = elements.decryptedOut.textContent;
+  if (text && text !== '-') {
+    navigator.clipboard.writeText(text).then(() => {
+      elements.copyDecrypted.textContent = '✓ تم النسخ';
+      setTimeout(() => elements.copyDecrypted.textContent = 'نسخ', 2000);
+    });
+  }
+});
+
+elements.downloadBtn.addEventListener('click', () => {
   const content = document.documentElement.outerHTML;
-  const blob = new Blob([content], {type: 'text/html;charset=utf-8'});
+  const blob = new Blob([content], { type: 'text/html;charset=utf-8' });
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.href = url;
   a.download = 'tashfiri.html';
   a.click();
   URL.revokeObjectURL(url);
+});
+
+// مزامنة مفاتيح التشفير
+elements.keyInput.addEventListener('input', () => {
+  elements.decryptKeyInput.value = elements.keyInput.value;
+});
+
+elements.decryptKeyInput.addEventListener('input', () => {
+  elements.keyInput.value = elements.decryptKeyInput.value;
+});
+
+elements.modToggle.addEventListener('change', () => {
+  elements.decryptModToggle.value = elements.modToggle.value;
+});
+
+elements.decryptModToggle.addEventListener('change', () => {
+  elements.modToggle.value = elements.decryptModToggle.value;
 });
 </script>
 </body>
