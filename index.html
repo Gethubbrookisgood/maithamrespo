@@ -290,22 +290,6 @@
       line-height: 1.5;
     }
 
-    #debug {
-      display: none;
-      white-space: pre-wrap;
-      overflow: auto;
-      margin-top: var(--spacing-md);
-      background: rgba(0, 0, 0, 0.4);
-      padding: var(--spacing-md);
-      border-radius: var(--radius-md);
-      height: 200px;
-      border: 1px solid var(--border-primary);
-      font-family: 'Space Mono', 'Consolas', 'Monaco', monospace;
-      font-size: 0.85rem;
-      line-height: 1.4;
-      font-weight: 400;
-    }
-
     .message {
       padding: var(--spacing-md);
       border-radius: var(--radius-md);
@@ -397,7 +381,7 @@
   <div class="container">
     <div class="header">
       <h1>🛡️ التشفير المعوق</h1>
-      <p class="subtitle">سوف يتم دق العالم زيجًا</p></p>
+      <p class="subtitle">سوف يتم دق العالم زيجًا</p>
     </div>
 
     <div class="section">
@@ -410,11 +394,6 @@
         <input id="addMarker" type="checkbox" checked />
         <label for="addMarker">تفعيل الحماية المتقدمة (يضمن أن النص مشفر من هذا الموقع)</label>
       </div>
-      <div class="checkbox-group">
-        <input id="showDebug" type="checkbox" />
-        <label for="showDebug">عرض تفاصيل التشفير التقنية</label>
-      </div>
-      <div id="debug"></div>
     </div>
 
     <div class="section">
@@ -490,17 +469,6 @@ const LANG_MARKER_TOKENS = {
 };
 
 /* ===== عناصر واجهة ===== */
-const debugEl = document.getElementById('debug');
-function dbg(...args){
-  if(document.getElementById('showDebug').checked){
-    debugEl.style.display = 'block';
-    debugEl.textContent += args.join(' ') + '\n';
-  }
-}
-function clearDbg(){ 
-  debugEl.textContent = ''; 
-  if(!document.getElementById('showDebug').checked) debugEl.style.display='none'; 
-}
 function showMessage(elementId, show = true) {
   document.getElementById(elementId).style.display = show ? 'flex' : 'none';
 }
@@ -538,7 +506,6 @@ function numToChar(num, lang){
 function encryptTextToTokens(text, key, lang){
   let keyIndex = 0;
   const tokens = [];
-  dbg('المفتاح المستخدم:', key.join(','));
   for(let ch of text){
     const num = charToNum(ch, lang);
     if(num){
@@ -546,7 +513,6 @@ function encryptTextToTokens(text, key, lang){
       const enc = num + k; // بدون % أو تدوير
       tokens.push(enc + "'");
       keyIndex++;
-      dbg(`حرف: ${ch} -> رقم: ${num} + مفتاح: ${k} = ${enc}`);
     } else {
       tokens.push(ch);
     }
@@ -559,7 +525,6 @@ function decryptTokensRange(tokens, key, lang, startIndex=0, endIndex = null){
   let kIdx = 0;
   let out = '';
   const stop = (endIndex === null) ? tokens.length : endIndex;
-  dbg('فك التشفير - المفتاح:', key.join(','));
   for(let i = startIndex; i < stop; i++){
     const t = tokens[i];
     if(/^\d+'$/.test(t)){
@@ -568,7 +533,6 @@ function decryptTokensRange(tokens, key, lang, startIndex=0, endIndex = null){
       const origNum = num - k; // بدون % أو تدوير
       const char = numToChar(origNum, lang);
       out += char;
-      dbg(`توكن: ${t} -> رقم: ${num} - مفتاح: ${k} = ${origNum} -> حرف: ${char}`);
       kIdx++;
     } else if(/^\s+$/.test(t)){
       const run = t.length;
@@ -584,7 +548,6 @@ function decryptTokensRange(tokens, key, lang, startIndex=0, endIndex = null){
 
 /* ===== تشفير ===== */
 function encrypt(){
-  clearDbg();
   hideAllMessages();
   const plain = document.getElementById('plainText').value || '';
   const key = parseKey();
@@ -604,8 +567,7 @@ function encrypt(){
     const encBody = encryptTextToTokens(plain, key, lang);
     let final = encBody;
     if(useMarker){
-
-const sys = SYS_MARKER_TOKENS.join(' ');
+      const sys = SYS_MARKER_TOKENS.join(' ');
       const langMark = LANG_MARKER_TOKENS[lang].join(' ');
       final = sys + ' ' + langMark + ' ' + encBody;
     }
@@ -645,7 +607,6 @@ function detectNumericMarkerAtStart(tokens){
   return null;
 }
 function decrypt(){
-  clearDbg();
   hideAllMessages();
   const cipher = document.getElementById('cipherInput').value || '';
   const key = parseKey();
@@ -684,3 +645,5 @@ function copyEncrypted(){
   document.execCommand('copy');
 }
 </script>
+</body>
+</html>
